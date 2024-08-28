@@ -1,0 +1,13 @@
+@NutriBem.Auth_HostAddress = http://localhost:5001
+
+POST {{NutriBem.Auth_HostAddress}}/auth/sign-up
+Accept: application/json
+
+{
+  "email": "gsobral@email.com",
+  "firstName": "Gabriel",
+  "lastName": "Sobral",
+  "password": "123"
+}
+
+###

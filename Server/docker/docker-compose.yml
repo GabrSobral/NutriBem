@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  nutribem.server:
+    container_name: "NutriBem.Server"
+    image: ${DOCKER_REGISTRY-}nutribem-server
+    restart: always
+    build:
+      context: ../src
+      dockerfile: ../src/NutriBem.Server/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "1.5GB"
+    depends_on:
+      - nutribem-postgres
+    networks:
+      - nutribem-server-network
+
+  nutribem-postgres:
+    container_name: "NutriBem.Server.Database"
+    command: postgres -c 'max_connections=10'
+    image: postgres:16.1
+    restart: always
+    environment:
+      - POSTGRES_USER=nutribem_root
+      - POSTGRES_PASSWORD=nutribem123
+      - POSTGRES_DB=nutribemdb
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "1.5GB"
+    volumes:
+      - ../volumes/postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+    networks:
+      - nutribem-server-network
+
+networks:
+  nutribem-server-network:
+    driver: bridge
