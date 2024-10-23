@@ -28,11 +28,6 @@ export function RecipeScreen() {
     recipeId: any;
   };
 
-  const textColor = useThemeColor(
-    { light: Colors.light.text, dark: Colors.dark.text },
-    "text"
-  );
-
   return (
     <ThemedView style={{ flex: 1, backgroundColor }}>
       <StatusBar style={colorScheme === "light" ? "dark" : "light"} />

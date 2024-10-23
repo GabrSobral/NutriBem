@@ -28,13 +28,13 @@ export function ProfileHeader() {
         </View>
       </View>
 
-      <Link
+      {/* <Link
         href="/profile/edit-profile"
         style={styles.profileEditButton}
         aria-label="Editar perfil"
       >
         <Ionicons name={"create-outline"} size={32} color={"#FFF"} />
-      </Link>
+      </Link> */}
     </View>
   );
 }

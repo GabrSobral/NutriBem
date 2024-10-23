@@ -1,13 +1,19 @@
+import { StatusBar } from "expo-status-bar";
+import { ScrollView, useColorScheme, View } from "react-native";
+
 import { AppHeader } from "@/components/design-system/AppHeader";
 import { ThemedText } from "@/components/design-system/ThemedText";
-import { ScrollView, View } from "react-native";
-import { styles } from "./style";
-import { MacroNutrientsChart } from "@/modules/home/screens/FoodDetail/components/MacroNutrientsChart";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { Colors } from "@/constants/Colors";
 import { ThemedView } from "@/components/design-system/ThemedView";
-import { FoodItem } from "./components/FoodItem";
+
 import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
+import { MacroNutrientsChart } from "@/modules/home/screens/FoodDetail/components/MacroNutrientsChart";
+
+import { useThemeColor } from "@/hooks/useThemeColor";
+
+import { Colors } from "@/constants/Colors";
+import { FoodItem } from "./components/FoodItem";
+
+import { styles } from "./style";
 
 export function DietPlan() {
   const backgroundColor = useThemeColor(
@@ -15,8 +21,11 @@ export function DietPlan() {
     "background"
   );
 
+  const colorScheme = useColorScheme()
+
   return (
     <ScrollView style={{ backgroundColor }}>
+      <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
       <AppHeader title="Plano Alimentar A" />
 
       <View style={styles.container}>
@@ -39,14 +48,13 @@ export function DietPlan() {
         <ThemedText type="subtitle">Refeições diárias</ThemedText>
 
         <View style={{ gap: 8 }}>
-          <FoodItem
-            totalKcal={1500}
-            meal={{ name: "Café da manhã" } as IMeal}
-          />
+          <FoodItem totalKcal={1500} meal={{ name: "Café da manhã" } as IMeal} />
+          <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
           <FoodItem totalKcal={1500} meal={{ name: "Almoço" } as IMeal} />
+          <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
+          <FoodItem totalKcal={1500} meal={{ name: "Jantar" } as IMeal} />
         </View>
 
-        <ThemedText type="subtitle">Macronutrientes</ThemedText>
         <MacroNutrientsChart
           calories={1500}
           carbohydrates={0}
