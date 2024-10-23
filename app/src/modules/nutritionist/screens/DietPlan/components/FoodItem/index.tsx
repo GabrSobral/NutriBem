@@ -4,18 +4,18 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { ThemedView } from "@/components/design-system/ThemedView";
 import { ThemedText } from "@/components/design-system/ThemedText";
+
+import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
 import { Lunch } from "@/modules/home/screens/Main/components/FoodList/FoodListItem/Lunch";
 import { Snack } from "@/modules/home/screens/Main/components/FoodList/FoodListItem/Snack";
 import { Dinner } from "@/modules/home/screens/Main/components/FoodList/FoodListItem/Dinner";
 import { Breakfast } from "@/modules/home/screens/Main/components/FoodList/FoodListItem/Breakfast";
 
-import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
-
 import { styles } from "./style";
 
 interface Props {
-    meal: IMeal;
-    totalKcal: number;
+  meal: IMeal;
+  totalKcal: number;
 }
 
 export function FoodItem({ meal, totalKcal }: Props) {
@@ -40,14 +40,11 @@ export function FoodItem({ meal, totalKcal }: Props) {
 
       <Link
         style={styles.addButton}
-        href={{
-          pathname: "/home/add-meal",
-          params: meal.id,
-        }}
+        href={{ pathname: "/nutri/meal-detail", params: meal.id }}
         aria-label="Adicionar alimento"
         onPress={() => {}}
       >
-        <Ionicons name="add" size={32} color="white" />
+        <Ionicons name="chevron-forward" size={32} color="white" />
       </Link>
     </ThemedView>
   );

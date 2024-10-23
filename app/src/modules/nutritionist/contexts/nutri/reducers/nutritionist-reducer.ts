@@ -1,3 +1,4 @@
+import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
 
 export type NutritionistActions =
   | {
@@ -8,11 +9,13 @@ export type NutritionistActions =
 
 export interface NutritionistState {
     currentNutritionist: null | any;
+    selectedMeal: IMeal | null;
     isNutritionistLoading: boolean;
 }
 
 export const initialNutritionistState: NutritionistState = {
     currentNutritionist: null,
+    selectedMeal: null,
     isNutritionistLoading: false
 };
 

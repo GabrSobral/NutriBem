@@ -9,10 +9,9 @@ import ParallaxScrollView from "@/components/design-system/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 
 import { styles } from "./style";
+import { DietPlanItem } from "./components/DietPlanItem";
 
 export function NutriProfile() {
-  const { navigate } = useNavigation();
-
   return (
     <ParallaxScrollView
       headerBackgroundColor={{
@@ -29,17 +28,7 @@ export function NutriProfile() {
         para atender às suas necessidades e objetivos específicos.
       </ThemedText>
 
-      <Pressable
-        style={styles.planButton}
-        android_ripple={{ color: Colors.light.primary }}
-        onPress={() => navigate("nutri/diet-plan")}
-      >
-        <Ionicons name="restaurant-outline" size={24} color="#000000bb" />
-
-        <ThemedText type="defaultSemiBold" style={{ fontSize: 18 }}>
-          Plano Alimentar A
-        </ThemedText>
-      </Pressable>
+      <DietPlanItem />
 
       {/* <Pressable style={styles.chatButton} android_ripple={{ color: "white" }}>
         <Ionicons name="chatbox-outline" size={24} color="white" />
