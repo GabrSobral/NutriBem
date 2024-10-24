@@ -1,9 +1,11 @@
-﻿namespace NutriBem.Presentation.Http.Controllers;
+﻿using NutriBem.Application.Handlers.Users.UserProfile.Commands.UpdateUserProfile;
+
+namespace NutriBem.Presentation.Http.Controllers;
 
 [Authorize]
 [ApiController]
 [Route("profile")]
-public class UserProfileController() : ControllerBase
+public class UserProfileController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Update the user profile by Id.
@@ -29,7 +31,10 @@ public class UserProfileController() : ControllerBase
             FirstName: request.FirstName,
             LastName: request.LastName,
             Email: request.Email,
-            BirthDate: request.BirthDate,
+            DateOfBirth: request.DateOfBirth,
+            PhoneNumber: request.PhoneNumber,
+            Address: request.Address,
+            PhotoUrl: request.PhotoUrl
         );
 
         await sender.Send(command);

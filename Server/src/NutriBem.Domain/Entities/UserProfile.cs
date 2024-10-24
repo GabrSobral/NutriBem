@@ -1,7 +1,7 @@
 ﻿namespace NutriBem.Domain.Entities;
 
 [Table("user_profile")]
-public sealed class UserProfile
+public class UserProfile
 {
     [Key]
     [ForeignKey("User")]
