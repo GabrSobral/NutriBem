@@ -3,10 +3,34 @@ import * as Progress from "react-native-progress";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 
 import { Colors } from "@/constants/Colors";
+import { useHome } from "@/modules/home/contexts/hook";
 import { ThemedView } from "@/components/design-system/ThemedView";
+
 import { style } from "./style";
 
 export function DailyProgress() {
+  const { homeState } = useHome();
+
+  const ingestedKcal = homeState.meals
+    .flatMap((meal) => meal.eatenFoods)
+    .map((item) => item.serving.calories)
+    .reduce((a, b) => Number(a) + Number(b), 0);
+
+  const ingestedCarbs = homeState.meals
+    .flatMap((meal) => meal.eatenFoods)
+    .map((item) => item.serving.carbohydrate)
+    .reduce((a, b) => Number(a) + Number(b), 0);
+
+  const ingestedFats = homeState.meals
+    .flatMap((meal) => meal.eatenFoods)
+    .map((item) => item.serving.fat)
+    .reduce((a, b) => Number(a) + Number(b), 0);
+
+  const ingestedProteins = homeState.meals
+    .flatMap((meal) => meal.eatenFoods)
+    .map((item) => item.serving.protein)
+    .reduce((a, b) => Number(a) + Number(b), 0);
+
   return (
     <ThemedView style={style.container}>
       <Image
@@ -26,10 +50,10 @@ export function DailyProgress() {
         lineCap="round"
         backgroundColor="#00000080"
       >
-        {(fill) => (
+        {() => (
           <View style={{ alignItems: "center" }}>
             <Text style={{ fontSize: 44, fontWeight: "bold", color: "white" }}>
-              2142
+              {ingestedKcal}
             </Text>
             <Text style={{ fontSize: 16, color: "white" }}>Restantes</Text>
           </View>
@@ -48,7 +72,7 @@ export function DailyProgress() {
             borderWidth={0}
             borderRadius={16}
           />
-          <Text style={{ color: "white" }}>86/120 g</Text>
+          <Text style={{ color: "white" }}>{ingestedCarbs.toFixed(2)}/120 g</Text>
         </View>
 
         <View style={{ gap: 2, alignItems: "center" }}>
@@ -62,7 +86,7 @@ export function DailyProgress() {
             borderWidth={0}
             borderRadius={16}
           />
-          <Text style={{ color: "white" }}>56/120 g</Text>
+          <Text style={{ color: "white" }}>{ingestedProteins.toFixed(2)}/120 g</Text>
         </View>
 
         <View style={{ gap: 2, alignItems: "center" }}>
@@ -76,7 +100,7 @@ export function DailyProgress() {
             borderWidth={0}
             borderRadius={16}
           />
-          <Text style={{ color: "white" }}>56/120 g</Text>
+          <Text style={{ color: "white" }}>{ingestedFats.toFixed(2)}/120 g</Text>
         </View>
       </View>
     </ThemedView>

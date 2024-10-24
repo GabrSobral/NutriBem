@@ -27,7 +27,7 @@ export function FoodListItem({ drag, handleRemove, meal }: Props) {
   const { homeDispatch } = useHome();
 
   const totalKcal = meal.eatenFoods
-    .map((item) => item.food.servings.serving[0].calories)
+    .map((item) => item.serving.calories)
     .reduce((a, b) => Number(a) + Number(b), 0);
 
   return (

@@ -76,8 +76,6 @@ export function HomeReducer(state: HomeState, action: HomeActions): HomeState {
       return { ...state, selectedMeal: action.payload };
 
     case "ADD_FOOD_TO_MEAL":
-      console.log(action.payload);
-
       return {
         ...state,
         selectedMeal: state.selectedMeal

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 
+
 import { DailyProgress } from "./components/DailyProgress";
 import RoundedParallaxScrollView from "./components/RoundedParallaxScrollView";
 
@@ -15,7 +16,7 @@ import { styles } from "./style";
 
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
-
+  
   return (
     <View style={{ flex: 1 }}>
       <RoundedParallaxScrollView
@@ -27,9 +28,7 @@ export function HomeScreen() {
         contentStyle={{ zIndex: 1, paddingBottom: 68 }}
         headerImage={<DailyProgress />}
       >
-
         <DailyCarousel />
-
         <FoodList />
       </RoundedParallaxScrollView>
 

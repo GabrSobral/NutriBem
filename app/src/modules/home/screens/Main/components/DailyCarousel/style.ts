@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -16,5 +15,12 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     gap: 8,
+  },
+
+  button: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    width: 50,
+    borderRadius: 8,
   },
 });

@@ -1,5 +1,5 @@
+import { router } from "expo-router";
 import { Fragment, useState } from "react";
-import { router, useNavigation } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import * as Progress from "react-native-progress";
@@ -186,6 +186,7 @@ export function AddMeal() {
             {homeState.selectedMeal?.eatenFoods.map((food) => (
               <FoodItem
                 item={food}
+                key={`${food.food.food_id}_${food.food.servings.serving[0].serving_id}`}
                 handleRemove={() =>
                   homeDispatch({
                     type: "REMOVE_EATEN_FOOD_FROM_MEAL",
