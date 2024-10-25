@@ -3,16 +3,16 @@ import {
   Pressable,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   useColorScheme,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Link, useNavigation } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/design-system/ThemedText";
-import { Ionicons } from "@expo/vector-icons";
+
 import { styles } from "./style";
 
 export default function AuthenticationScreen() {

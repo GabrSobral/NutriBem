@@ -62,7 +62,7 @@ export function FoodListItem({ drag, handleRemove, meal }: Props) {
         <Link
           style={styles.addButton}
           href={{
-            pathname: "/home/add-meal",
+            pathname: "/user/home/add-meal",
             params: meal.id,
           }}
           aria-label="Adicionar alimento"

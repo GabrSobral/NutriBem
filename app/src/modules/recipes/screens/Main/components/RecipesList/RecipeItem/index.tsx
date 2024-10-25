@@ -19,7 +19,7 @@ export function RecipeItem({ item }: Props) {
           style={[styles.recipeItem, { borderColor: colorScheme === "light" ? "#00000020" : "#FFFFFF40" }]} 
           android_ripple={{ color: Colors.light.primary }}
           onPress={() => {
-            navigation.navigate("recipes/recipe-detail", { recipeId: item })
+            navigation.navigate("user/recipes/recipe-detail", { recipeId: item })
           }}  
         >
           <Image

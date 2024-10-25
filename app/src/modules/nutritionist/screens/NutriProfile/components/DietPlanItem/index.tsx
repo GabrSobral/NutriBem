@@ -15,7 +15,7 @@ export function DietPlanItem() {
     <Pressable
       style={styles.planButton}
       android_ripple={{ color: Colors.light.primary }}
-      onPress={() => navigate("nutri/diet-plan")}
+      onPress={() => navigate("user/nutri/diet-plan")}
     >
       <Ionicons name="restaurant-outline" size={24} color="#000000bb" />
 

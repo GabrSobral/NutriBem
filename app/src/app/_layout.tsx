@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import "react-native-reanimated";
-import { Stack } from "expo-router";
+import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -14,6 +13,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 
 import { HomeProvider } from "@/modules/home/contexts/context";
 import { NutritionistProvider } from "@/modules/nutritionist/contexts/nutri";
+import { RoleVerificationLayer } from "@/components/application/RoleVerificationLayer";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,9 +24,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
   if (!loaded) {
@@ -38,16 +36,7 @@ export default function RootLayout() {
       <AuthProvider>
         <HomeProvider>
           <NutritionistProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                animation: "ios",
-                animationDuration: 100,
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
+            <RoleVerificationLayer />
           </NutritionistProvider>
         </HomeProvider>
       </AuthProvider>

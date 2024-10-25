@@ -20,7 +20,7 @@ export default function ProfileScreen() {
       <FoodPlans />
       <SavedRecipes />
 
-      <Link href="/auth">Settings</Link>
+      {/* <Link href="/auth">Settings</Link> */}
     </ParallaxScrollView>
   );
 }

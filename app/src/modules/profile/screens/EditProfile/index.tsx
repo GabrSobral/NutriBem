@@ -1,17 +1,16 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image, Pressable, SafeAreaView, View } from "react-native";
 
 import { Input } from "@/components/design-system/Input";
+import { Button } from "@/components/design-system/Button";
 import { AppHeader } from "@/components/design-system/AppHeader";
 
 import { styles } from "./style";
-import { Fragment } from "react";
-import { Button } from "@/components/design-system/Button";
-import { Ionicons } from "@expo/vector-icons";
 
 export function EditProfile() {
   return (
     <SafeAreaView>
-      <AppHeader />
+      <AppHeader title="Editar usuário"/>
 
       <View style={styles.container}>
         <Pressable

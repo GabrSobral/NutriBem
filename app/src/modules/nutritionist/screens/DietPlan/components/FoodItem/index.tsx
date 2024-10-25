@@ -40,7 +40,7 @@ export function FoodItem({ meal, totalKcal }: Props) {
 
       <Link
         style={styles.addButton}
-        href={{ pathname: "/nutri/meal-detail", params: meal.id }}
+        href={{ pathname: "/nutritionist/meal-detail", params: meal.id }}
         aria-label="Adicionar alimento"
         onPress={() => {}}
       >

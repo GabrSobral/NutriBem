@@ -37,7 +37,7 @@ export function ProfileHeader() {
       </View>
 
       <Link
-        href="/profile/edit-profile"
+        href="/user/profile/edit-profile"
         style={styles.profileEditButton}
         aria-label="Editar perfil"
       >

@@ -12,9 +12,10 @@ import { Colors } from "@/constants/Colors";
 
 interface Props extends PressableProps {
   children: ReactNode;
+  icon?: ReactNode;
 }
 
-export function Button({ children, ...rest }: Props) {
+export function Button({ children, icon, ...rest }: Props) {
   const { style } = rest;
 
   return (
@@ -26,7 +27,9 @@ export function Button({ children, ...rest }: Props) {
         style as StyleProp<ViewStyle>
       )}
     >
-      <Text style={{ color: "#FFF", fontWeight: "semibold", fontSize: 18 }}>
+      {icon || null}
+      
+      <Text style={styles.childrenContainer}>
         {children}
       </Text>
     </Pressable>
@@ -34,9 +37,17 @@ export function Button({ children, ...rest }: Props) {
 }
 
 const styles = StyleSheet.create({
+  childrenContainer: {
+    color: "#FFF",
+    fontWeight: "semibold",
+    fontSize: 18,
+  },
   submitButton: {
     width: "100%",
     padding: 16,
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "center",
     borderRadius: 6,
     backgroundColor: Colors.light.secondary,
     alignItems: "center",

@@ -82,7 +82,7 @@ export function NotConnectedScreen() {
           </Input.Wrapper>
         </Input.Group>
 
-        <Link asChild href="/nutri/scan-code">
+        <Link asChild href="/user/nutri/scan-code">
           <Pressable
             style={styles.scanCodeButton}
             aria-label="Escanear código de vínculo"

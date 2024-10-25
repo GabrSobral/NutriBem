@@ -95,7 +95,7 @@ export function AddMeal() {
               setValue(food);
 
               router.navigate({
-                pathname: "/home/add-food",
+                pathname: "/user/home/add-food",
                 params: { foodId: food.food_id },
               });
 

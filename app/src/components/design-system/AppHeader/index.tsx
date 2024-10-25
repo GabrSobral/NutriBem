@@ -2,19 +2,23 @@ import { StyleSheet, View } from "react-native";
 
 import { GoBackButton } from "../GoBackButton";
 import { ThemedText } from "@/components/design-system/ThemedText";
+import { ReactNode } from "react";
 
 interface Props {
   title: string;
+  button?: ReactNode
 }
 
-export function AppHeader({ title }: Props) {
+export function AppHeader({ title, button }: Props) {
   return (
     <View style={styles.container}>
       <GoBackButton />
 
-      <ThemedText type="subtitle" style={styles.title}>
+      <ThemedText type="subtitle" style={[styles.title, { paddingLeft: button ? 54 : 0 }]}>
         {title}
       </ThemedText>
+
+      {button}
     </View>
   );
 }

@@ -32,7 +32,7 @@ export function AddMealModal({ onRequestClose, visible }: Props) {
     await addMealAsync(meal);
     onRequestClose();
 
-    router.navigate({ pathname: "/home/add-meal" });
+    router.navigate({ pathname: "/user/home/add-meal" });
   }
 
   return (

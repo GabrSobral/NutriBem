@@ -55,7 +55,7 @@ export function FoodItem({ handleRemove, item }: Props) {
         <Link
           style={styles.addButton}
           href={{
-            pathname: "/home/add-food",
+            pathname: "/user/home/add-food",
             params: { foodId: item.food.food_id },
           }}
         >

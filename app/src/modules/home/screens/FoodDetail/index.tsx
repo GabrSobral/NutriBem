@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, Text, useColorScheme, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { Input } from "@/components/design-system/Input";
@@ -26,9 +19,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 
 import { useHome } from "../../contexts/hook";
 import { useAuth } from "@/contexts/AuthContext/hook";
-import { IMeal } from "../../contexts/reducers/home-reducer";
 
-import { SearchedFood } from "../../services/search-food";
 import { getFoodById, IFood } from "../../services/get-food-by-id";
 import { styles } from "./style";
 
@@ -90,7 +81,7 @@ export function FoodDetail() {
       },
     });
 
-    router.navigate({ pathname: "/home/add-meal" });
+    router.navigate({ pathname: "/user/home/add-meal" });
   }
 
   return (

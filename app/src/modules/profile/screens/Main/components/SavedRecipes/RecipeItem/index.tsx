@@ -1,11 +1,11 @@
 import { useNavigation } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Image, Pressable, useColorScheme, View } from "react-native";
 
 import { ThemedText } from "@/components/design-system/ThemedText";
 
-import { styles } from "./style";
 import { Colors } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { styles } from "./style";
 
 interface Props {
   item: any;
@@ -23,7 +23,7 @@ export function RecipeItem({ item }: Props) {
       ]}
       android_ripple={{ color: Colors.light.primary }}
       onPress={() => {
-        navigation.navigate("recipes/recipe-detail", { recipeId: item });
+        navigation.navigate("user/recipes/recipe-detail", { recipeId: item });
       }}
     >
       <View style={[styles.imageItem, { position: "relative" }]}>

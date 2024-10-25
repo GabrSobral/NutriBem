@@ -1,5 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 
 import { ThemedText } from "@/components/design-system/ThemedText";
 import { ThemedView } from "@/components/design-system/ThemedView";
