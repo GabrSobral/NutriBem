@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useLocalSearchParams } from "expo-router";
-import { useColorScheme, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
+import { Pressable, Text, useColorScheme, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { Input } from "@/components/design-system/Input";
@@ -21,22 +21,29 @@ import { useAuth } from "@/contexts/AuthContext/hook";
 
 import { styles } from "./style";
 import { getFoodById, IFood } from "@/modules/home/services/get-food-by-id";
-import { useNutritionist } from "../../contexts/nutri/hook";
+import { useNutritionistDietPlan } from "../../contexts/diet-plan/hook";
 
 export type Serving = IFood["food"]["servings"]["serving"][number];
 
 export function FoodDetail() {
   const [isFocus, setIsFocus] = useState(false);
   const { fatSecretToken } = useAuth();
-  // const { nutritionistState } = useNutritionist();
+  const { editDietPlanState, editDietPlanDispatch } = useNutritionistDietPlan();
   const [quantity, setQuantity] = useState(1);
 
   const [selectedServing, setSelectedServing] = useState<Serving | null>(null);
 
-  const { foodId, selectedMealName } = useLocalSearchParams() as any as {
+  const { foodId, mealId } = useLocalSearchParams() as any as {
     foodId: IFood["food"]["food_id"];
-    selectedMealName: string;
+    mealId: string;
   };
+
+  console.log({ foodId, mealId });
+
+  const meal = useMemo(
+    () => editDietPlanState.dailyMeals.find((item) => item.id === mealId),
+    [editDietPlanState.dailyMeals, mealId]
+  );
 
   const [currentFood, setCurrentFood] = useState<IFood | null>(null);
 
@@ -67,6 +74,24 @@ export function FoodDetail() {
     });
   }, [foodId, fatSecretToken, currentFood]);
 
+  function handleAddFoodToMeal() {
+    if (!meal || !currentFood || !selectedServing) {
+      return;
+    }
+
+    editDietPlanDispatch({
+      type: "ADD_FOOD_TO_MEAL",
+      payload: {
+        mealId: meal.id,
+        food: currentFood["food"],
+        serving: selectedServing,
+        quantity,
+      },
+    });
+
+    router.back();
+  }
+
   return (
     <ThemedView style={{ flex: 1, backgroundColor }}>
       <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
@@ -77,7 +102,7 @@ export function FoodDetail() {
           <View style={styles.headerContainer}>
             <View style={styles.dateBadge}>
               <ThemedText type="subtitle">
-                {selectedMealName || "-"}
+                {meal?.name || "-"}
               </ThemedText>
               <ThemedText>Segunda-feira, 08 de maio</ThemedText>
             </View>
@@ -128,6 +153,16 @@ export function FoodDetail() {
             }}
           />
         </View>
+
+        <Pressable
+          style={styles.addFoodButton}
+          android_ripple={{ color: "white", borderless: false }}
+          onPress={handleAddFoodToMeal}
+        >
+          <Text style={{ color: "white", fontSize: 16 }}>
+            Adicionar ao "{meal?.name}"
+          </Text>
+        </Pressable>
 
         <ThemedText type="subtitle">Informações nutricionais</ThemedText>
         <ThemedText>{selectedServing?.serving_description}</ThemedText>

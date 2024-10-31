@@ -23,7 +23,7 @@ export function PatientItem({ item }: Props) {
       ]}
       android_ripple={{ color: Colors.light.primary, borderless: false, radius: 200 }}
       onPress={() => {
-        navigation.navigate("nutritionist/patient-detail", { recipeId: item });
+        navigation.navigate("patient-detail", { recipeId: item });
       }}
     >
       <View style={[styles.imageItem, { position: "relative" }]}>

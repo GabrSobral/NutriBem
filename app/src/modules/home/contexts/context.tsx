@@ -53,10 +53,6 @@ export function HomeProvider({ children }: HomeProviderProps) {
     homeDispatch({ type: "REMOVE_MEAL", payload: mealId });
   }
 
-  useEffect(() => {
-    console.log(homeState.selectedMeal);
-  }, [homeState.selectedMeal]);
-
   return (
     <HomeContext.Provider
       value={{

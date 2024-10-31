@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, useColorScheme, View } from "react-native";
 
@@ -9,20 +10,21 @@ import { ThemedView } from "@/components/design-system/ThemedView";
 import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
 import { MacroNutrientsChart } from "@/modules/home/screens/FoodDetail/components/MacroNutrientsChart";
 
+import { Colors } from "@/constants/Colors";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-import { Colors } from "@/constants/Colors";
 import { FoodItem } from "./components/FoodItem";
 
 import { styles } from "./style";
 
 export function DietPlan() {
+  const navigation = useNavigation();
+  const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor(
     { light: Colors.light.background, dark: Colors.dark.background },
     "background"
   );
 
-  const colorScheme = useColorScheme();
 
   return (
     <View style={{ backgroundColor, flex: 1 }}>
@@ -37,7 +39,9 @@ export function DietPlan() {
               borderless: false,
               radius: 18,
             }}
+            aria-label="Editar"
             style={{ padding: 6, borderRadius: 20 }}
+            onPress={() => navigation.navigate("diet-plan/edit-diet-plan")}
           >
             <Ionicons name="create-outline" size={24} />
           </Pressable>
@@ -62,33 +66,29 @@ export function DietPlan() {
             </View>
           </View>
 
-          <ThemedText type="subtitle">Descrição</ThemedText>
+          <View style={{ gap: 12 }}>
+            <ThemedText type="subtitle">Descrição</ThemedText>
 
-          <ThemedText>
-            Este plano alimentar foi desenvolvido para promover a perda de peso
-            de forma saudável e sustentável. Seguir as orientações abaixo
-            ajudará a atingir os objetivos estabelecidos.
-          </ThemedText>
+            <ThemedText>
+              Este plano alimentar foi desenvolvido para promover a perda de
+              peso de forma saudável e sustentável. Seguir as orientações abaixo
+              ajudará a atingir os objetivos estabelecidos.
+            </ThemedText>
+          </View>
 
-          <ThemedText type="subtitle">Ingestão diária</ThemedText>
-          <ThemedText
-            type="subtitle"
-            style={{ color: Colors.light.primary, fontSize: 18 }}
-          >
-            1500 kcal
-          </ThemedText>
+          <View style={{ gap: 12 }}>
+            <ThemedText type="subtitle">Refeições diárias</ThemedText>
 
-          <ThemedText type="subtitle">Refeições diárias</ThemedText>
-
-          <View style={{ gap: 8 }}>
-            <FoodItem
-              totalKcal={1500}
-              meal={{ name: "Café da manhã" } as IMeal}
-            />
-            <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
-            <FoodItem totalKcal={1500} meal={{ name: "Almoço" } as IMeal} />
-            <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
-            <FoodItem totalKcal={1500} meal={{ name: "Jantar" } as IMeal} />
+            <View style={{ gap: 8 }}>
+              <FoodItem
+                totalKcal={1500}
+                meal={{ name: "Café da manhã" } as IMeal}
+              />
+              <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
+              <FoodItem totalKcal={1500} meal={{ name: "Almoço" } as IMeal} />
+              <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
+              <FoodItem totalKcal={1500} meal={{ name: "Jantar" } as IMeal} />
+            </View>
           </View>
 
           <MacroNutrientsChart

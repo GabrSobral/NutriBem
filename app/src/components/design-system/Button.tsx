@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  useColorScheme,
   ViewStyle,
 } from "react-native";
 import { ReactNode } from "react";
@@ -13,25 +14,26 @@ import { Colors } from "@/constants/Colors";
 interface Props extends PressableProps {
   children: ReactNode;
   icon?: ReactNode;
+  isOutlined?: boolean;
 }
 
 export function Button({ children, icon, ...rest }: Props) {
   const { style } = rest;
+  const colorScheme = useColorScheme();
 
   return (
     <Pressable
       android_ripple={{ color: "#FFF", borderless: false }}
       {...rest}
-      style={StyleSheet.compose(
+      style={StyleSheet.flatten([
         styles.submitButton,
-        style as StyleProp<ViewStyle>
-      )}
+        { backgroundColor: Colors[colorScheme as "light" | "dark"].secondary },
+        style as StyleProp<ViewStyle>,
+      ])}
     >
       {icon || null}
-      
-      <Text style={styles.childrenContainer}>
-        {children}
-      </Text>
+
+      <Text style={styles.childrenContainer}>{children}</Text>
     </Pressable>
   );
 }

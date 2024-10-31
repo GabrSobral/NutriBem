@@ -20,7 +20,7 @@ interface InputGroupProps extends ViewProps {
 
 function InputGroup({ children, ...rest }: InputGroupProps) {
   return (
-    <View {...rest} style={[style.inputContainer, rest.style]}>
+    <View {...rest} style={StyleSheet.compose(style.inputContainer, rest.style)}>
       {children}
     </View>
   );

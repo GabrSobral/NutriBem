@@ -25,7 +25,7 @@ export const Colors = {
     text: "#ECEDEE",
     placeholder: "#9BA1A6",
     primary: "#FF914D",
-    secondary: "#003366",
+    secondary: "#4682B4",
 
     background: "#151718",
     backgroundSoft: "#1C1C1C",

@@ -1,4 +1,4 @@
-import { Pressable, View } from "react-native";
+import { Pressable, useColorScheme, View } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
@@ -10,14 +10,15 @@ import { styles } from "./style";
 
 export function DietPlanItem() {
   const { navigate } = useNavigation();
+  const colorScheme = useColorScheme();
 
   return (
     <Pressable
       style={styles.planButton}
       android_ripple={{ color: Colors.light.primary }}
-      onPress={() => navigate("nutritionist/diet-plan")}
+      onPress={() => navigate("diet-plan/index")}
     >
-      <Ionicons name="restaurant-outline" size={24} color="#000000bb" />
+      <Ionicons name="restaurant-outline" size={24} color={colorScheme === "light" ? "#000000bb" : "#FFFFFFbb"} />
 
       <View>
         <ThemedText type="defaultSemiBold" style={{ fontSize: 18 }}>
@@ -31,6 +32,7 @@ export function DietPlanItem() {
             size={18}
             color={Colors.light.primary}
           />
+          
           <ThemedText>28/08/2024</ThemedText>
         </View>
       </View>

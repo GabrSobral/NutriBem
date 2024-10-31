@@ -1,22 +1,47 @@
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 
 import { GoBackButton } from "../GoBackButton";
 import { ThemedText } from "@/components/design-system/ThemedText";
 import { ReactNode } from "react";
+import { Input } from "../Input";
 
 interface Props {
   title: string;
-  button?: ReactNode
+  button?: ReactNode;
+  activeInput?: boolean;
+  inputValue?: string;
+  changeValue?: (value: string) => void;
 }
 
-export function AppHeader({ title, button }: Props) {
+const width = Dimensions.get("window").width; 
+
+export function AppHeader({
+  title,
+  button,
+  inputValue,
+  changeValue,
+  activeInput = false,
+}: Props) {
   return (
     <View style={styles.container}>
       <GoBackButton />
 
-      <ThemedText type="subtitle" style={[styles.title, { paddingLeft: button ? 54 : 0 }]}>
-        {title}
-      </ThemedText>
+      {activeInput ? (
+        <Input
+          placeholder="Nome do plano alimentar"
+          value={inputValue}
+          onChangeText={changeValue}
+          style={{ flex: 1, width: "auto", textAlign: "center", fontWeight: "bold" }}
+        />
+      ) : (
+        <ThemedText
+          type="subtitle"
+          numberOfLines={1}
+          style={[styles.title, { paddingLeft: button ? 54 : 0 }]}
+        >
+          {title}
+        </ThemedText>
+      )}
 
       {button}
     </View>
@@ -40,5 +65,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginHorizontal: "auto",
     transform: [{ translateX: -32 }],
+    maxWidth: width - (48 + 16 + 12) * 2,
+    overflow: "hidden"
   },
 });

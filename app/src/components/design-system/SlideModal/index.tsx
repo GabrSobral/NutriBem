@@ -41,7 +41,7 @@ export function SlideModal({
       transparent={true}
       visible={visible}
       hardwareAccelerated
-      style={{ alignItems: "center", justifyContent: "center" }}
+      style={{ alignItems: "center", justifyContent: "center", backgroundColor: "red", flex: 1 }}
       onRequestClose={onRequestClose}
     >
       <ThemedView

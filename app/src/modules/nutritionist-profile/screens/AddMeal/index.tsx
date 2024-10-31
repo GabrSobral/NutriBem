@@ -1,33 +1,24 @@
-import { router } from "expo-router";
-import { Fragment, useState } from "react";
+import { useMemo, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
-import * as Progress from "react-native-progress";
 import { Dropdown } from "react-native-element-dropdown";
+import { router, useLocalSearchParams } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, useColorScheme, View } from "react-native";
 
 import { FoodItem } from "./components/FoodItem";
 import { MacroNutrients } from "./components/MacroNutrients";
-import { FoodItemToIngest } from "./components/FoodItemToIngest";
 
 import { AppHeader } from "@/components/design-system/AppHeader";
 import { ThemedView } from "@/components/design-system/ThemedView";
 import { ThemedText } from "@/components/design-system/ThemedText";
 
 import { Colors } from "@/constants/Colors";
-import { SearchedFood } from "../../services/search-food";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-import { useHome } from "../../contexts/hook";
-
 import { styles } from "./style";
+import { SearchedFood } from "@/modules/home/services/search-food";
+import { useNutritionistDietPlan } from "../../contexts/diet-plan/hook";
 
 type Food = SearchedFood["foods"]["food"][number];
 
@@ -38,33 +29,40 @@ export function AddMeal() {
     { light: Colors.light.background, dark: Colors.dark.background },
     "background"
   );
+  const { mealId } = useLocalSearchParams() as { mealId: string };
 
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState<Food | null>(null);
   const [foods, setFoods] = useState<SearchedFood["foods"]["food"]>([]);
 
-  const { searchFoodAsync, homeState, homeDispatch } = useHome();
+  const { searchFoodAsync, editDietPlanState, editDietPlanDispatch } =
+    useNutritionistDietPlan();
 
-  const ingestedKcal = homeState.selectedMeal?.eatenFoods
-    .map((item) => item.food.servings.serving[0].calories)
+  const meal = useMemo(
+    () => editDietPlanState.dailyMeals.find((item) => item.id === mealId),
+    [editDietPlanState.dailyMeals, mealId]
+  );
+
+  const ingestedKcal = meal?.foods
+    .map((item) => Number(item.food.servings.serving[0].calories) * item.quantity)
     .reduce((a, b) => Number(a) + Number(b), 0);
 
-  const ingestedCarbs = homeState.selectedMeal?.eatenFoods
-    .map((item) => item.food.servings.serving[0].carbohydrate)
+  const ingestedCarbs = meal?.foods
+    .map((item) => Number(item.food.servings.serving[0].carbohydrate) * item.quantity)
     .reduce((a, b) => Number(a) + Number(b), 0);
 
-  const ingestedFats = homeState.selectedMeal?.eatenFoods
-    .map((item) => item.food.servings.serving[0].fat)
+  const ingestedFats = meal?.foods
+    .map((item) => Number(item.food.servings.serving[0].fat) * item.quantity)
     .reduce((a, b) => Number(a) + Number(b), 0);
 
-  const ingestedProteins = homeState.selectedMeal?.eatenFoods
-    .map((item) => item.food.servings.serving[0].protein)
+  const ingestedProteins = meal?.foods
+    .map((item) => Number(item.food.servings.serving[0].protein) * item.quantity)
     .reduce((a, b) => Number(a) + Number(b), 0);
 
   return (
     <ThemedView style={{ flex: 1, backgroundColor }}>
       <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
-      <AppHeader title={homeState.selectedMeal?.name || ""} />
+      <AppHeader title={meal?.name || ""} />
 
       <ScrollView style={[styles.container, { backgroundColor }]}>
         <View style={styles.searchContainer}>
@@ -89,14 +87,15 @@ export function AddMeal() {
             onBlur={() => setIsFocus(false)}
             onChangeText={async (value) => {
               const result = await searchFoodAsync(value);
+
               setFoods(result.foods.food);
             }}
             onChange={(food) => {
               setValue(food);
 
               router.navigate({
-                pathname: "/user/home/add-food",
-                params: { foodId: food.food_id },
+                pathname: "/nutritionist/diet-plan/add-food-diet-plan",
+                params: { foodId: food.food_id, mealId },
               });
 
               setIsFocus(false);
@@ -120,23 +119,12 @@ export function AddMeal() {
           }}
         >
           <ThemedText type="subtitle">Ingestão diária</ThemedText>
-          <ThemedText>
-            {ingestedKcal}/{homeState.selectedMeal?.maxKcal || 0} kcal
+          <ThemedText
+            style={{ color: Colors.light.primary, fontWeight: "bold" }}
+          >
+            {ingestedKcal} kcal
           </ThemedText>
         </View>
-
-        <Progress.Bar
-          progress={
-            (ingestedKcal || 1) / (homeState.selectedMeal?.maxKcal || 1)
-          }
-          height={8}
-          style={{ marginTop: 12 }}
-          width={Dimensions.get("window").width - 32}
-          color={Colors.light.primary}
-          unfilledColor="#00000010"
-          borderWidth={0}
-          borderRadius={16}
-        />
 
         <MacroNutrients
           carbs={{ current: ingestedCarbs || 0, max: 0 }}
@@ -144,30 +132,13 @@ export function AddMeal() {
           proteins={{ current: ingestedProteins || 0, max: 0 }}
         />
 
-        {homeState.selectedMeal?.remainingFoods.length !== 0 && (
-          <Fragment>
-            <ThemedText type="subtitle" style={{ marginTop: 12 }}>
-              Refeições restantes (
-              {homeState.selectedMeal?.remainingFoods.length})
-            </ThemedText>
-
-            <GestureHandlerRootView>
-              <View style={styles.foodsList}>
-                {homeState.selectedMeal?.remainingFoods.map((food) => (
-                  <FoodItemToIngest key={food.food.food_id} />
-                ))}
-              </View>
-            </GestureHandlerRootView>
-          </Fragment>
-        )}
-
         <ThemedText type="subtitle" style={{ marginTop: 12 }}>
-          Refeições ingeridas ({homeState.selectedMeal?.eatenFoods.length})
+          Refeições sugeridas ({meal?.foods.length})
         </ThemedText>
 
         <GestureHandlerRootView>
           <View style={styles.foodsList}>
-            {homeState.selectedMeal?.eatenFoods.length === 0 && (
+            {meal?.foods.length === 0 && (
               <View
                 style={{
                   paddingHorizontal: 16,
@@ -179,20 +150,20 @@ export function AddMeal() {
                   backgroundColor: `${Colors.light.primary}20`,
                 }}
               >
-                <ThemedText>Nenhum alimento ingerido</ThemedText>
+                <ThemedText>Nenhum alimento sugerido</ThemedText>
               </View>
             )}
 
-            {homeState.selectedMeal?.eatenFoods.map((food) => (
+            {meal?.foods?.map((food) => (
               <FoodItem
                 item={food}
                 key={`${food.food.food_id}_${food.food.servings.serving[0].serving_id}`}
                 handleRemove={() =>
-                  homeDispatch({
-                    type: "REMOVE_EATEN_FOOD_FROM_MEAL",
+                  editDietPlanDispatch({
+                    type: "REMOVE_FOOD_FROM_MEAL",
                     payload: {
                       foodId: food.food.food_id,
-                      mealId: homeState.selectedMeal?.id || "",
+                      mealId: meal?.id || "",
                     },
                   })
                 }

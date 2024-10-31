@@ -135,7 +135,7 @@ export function FoodDetail() {
             labelField="serving_description"
             valueField="serving_description"
             placeholder={!isFocus ? "Select item" : "..."}
-            searchPlaceholder="Search..."
+            searchPlaceholder="Pesquisar"
             value={selectedServing}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
