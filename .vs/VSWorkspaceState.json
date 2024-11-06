@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Server",
+    "\\Server\\src",
+    "\\Server\\src\\NutriBem.Presentation\\Http",
+    "\\Server\\src\\NutriBem.Presentation\\Http\\Controllers",
+    "\\Server\\src\\NutriBem.Server"
+  ],
+  "SelectedNode": "\\Server\\src\\NutriBem.Server\\Dockerfile",
+  "PreviewInSolutionExplorer": false
+}

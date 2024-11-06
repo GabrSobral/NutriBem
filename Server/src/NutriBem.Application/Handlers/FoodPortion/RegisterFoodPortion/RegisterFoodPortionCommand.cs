@@ -1,4 +1,4 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking;
+﻿namespace NutriBem.Application.Handlers.FoodPortion;
 public record RegisterFoodPortionCommand(
     int Id,
     int FoodId,

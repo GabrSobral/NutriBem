@@ -15,7 +15,7 @@ public class DailyFoodTracking
 
     [Required]
     [MaxLength(255)]
-    public string FoodName { get; set; }
+    public string? FoodName { get; set; }
 
     [Required]
     public decimal FatCount { get; set; }

@@ -1,5 +1,5 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking;
-public record UpdateFoodTrackingQuery() : IQuery<IEnumerable<UpdateFoodTrackingResponse>>;
+﻿namespace NutriBem.Application.Handlers.FoodTracking.Update;
+public record UpdateFoodTrackingQuery() : IQuery<UpdateFoodTrackingResponse>;
 
 public record UpdateFoodTrackingResponse
 {

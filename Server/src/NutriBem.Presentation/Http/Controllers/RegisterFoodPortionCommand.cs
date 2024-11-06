@@ -1,4 +1,5 @@
 ﻿using NutriBem.Application.Core.Behaviours.Messaging;
+using NutriBem.Application.Handlers.FoodPortion;
 
 namespace NutriBem.Application.Handlers.FoodTracking;
 public record RegisterFoodPortionCommand(

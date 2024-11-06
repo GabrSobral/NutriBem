@@ -1,4 +1,4 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking;
+﻿namespace NutriBem.Application.Handlers.FoodTracking.Read;
 
 public record GetFoodTrackingByUserIdQuery(Ulid UserId, DateTime Date) : IQuery<IEnumerable<GetFoodTrackingByUserIdResponse>>;
 

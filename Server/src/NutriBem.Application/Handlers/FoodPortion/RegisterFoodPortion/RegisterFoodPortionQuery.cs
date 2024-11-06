@@ -1,4 +1,4 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking;
+﻿namespace NutriBem.Application.Handlers.FoodPortion;
 public record RegisterFoodPortionQuery() : IQuery<IEnumerable<RegisterFoodPortionResponse>>;
 
 public record RegisterFoodPortionResponse

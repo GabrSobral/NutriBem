@@ -12,7 +12,9 @@ public class DataContext : DbContext
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
+    public DbSet<Food> Food { get; set; }
     public DbSet<DailyFoodTracking> DailyFoodTrackings { get; set; }
+    public DbSet<FoodPortion> FoodPortion { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

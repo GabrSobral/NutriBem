@@ -1,5 +1,5 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking.Update;
-public record UpdateFoodTrackingCommand(
+﻿namespace NutriBem.Application.Handlers.FoodTracking.Read;
+public record GetFoodTrackingByUserIdCommand(
     Ulid UserId,
     int FoodId,
     string? FoodName,
@@ -7,4 +7,4 @@ public record UpdateFoodTrackingCommand(
     decimal ProteinCount,
     decimal CarbohydratesCount,
     DateTime RegisteredAt
-) : ICommand<UpdateFoodTrackingResponse>;
+) : ICommand<GetFoodTrackingByUserIdResponse>;

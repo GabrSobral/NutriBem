@@ -3,6 +3,7 @@ public record CreateFoodTrackingQuery() : IQuery<IEnumerable<CreateFoodTrackingR
 
 public record CreateFoodTrackingResponse
 {
+    public Ulid Id { get; set; }
     public Ulid UserId { get; init; }
     public int FoodId { get; init; }
     public string? FoodName { get; set; }

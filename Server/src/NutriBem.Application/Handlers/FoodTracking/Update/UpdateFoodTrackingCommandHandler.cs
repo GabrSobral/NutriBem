@@ -1,4 +1,4 @@
-﻿namespace NutriBem.Application.Handlers.FoodTracking;
+﻿namespace NutriBem.Application.Handlers.FoodTracking.Update;
 public sealed class UpdateFoodTrackingCommandHandler(
     ILogger<UpdateFoodTrackingCommandHandler> logger,
     DataContext dbContext

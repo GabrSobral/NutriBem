@@ -1,4 +1,8 @@
-﻿using NutriBem.Application.Handlers.FoodTracking;
+﻿using NutriBem.Application.Handlers.FoodPortion;
+using NutriBem.Application.Handlers.FoodTracking;
+using NutriBem.Application.Handlers.FoodTracking.Delete;
+using NutriBem.Application.Handlers.FoodTracking.Read;
+using NutriBem.Application.Handlers.FoodTracking.Update;
 
 namespace NutriBem.Presentation.Http.Controllers;
 
@@ -75,6 +79,32 @@ public class FoodTrackingController(ISender sender, IHttpContextAccessor httpCon
     }
 
     /// <summary>
+    /// Delete the food tracking for the user in a certain day
+    /// </summary>
+    /// <param name="command">DeleteFoodTrackingCommand</param>
+    /// <response code="204">Returns the deleted food tracking</response>
+    /// <response code="400">If the "Id" is null</response>
+    /// <response code="404">If the food tracking was not found</response>
+    /// <response code="500">Internal server error</response>
+    /// <returns></returns>
+    [HttpDelete("delete", Name = nameof(DeleteFoodTracking))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteFoodTracking([FromBody] DeleteFoodTrackingCommand command)
+    {
+        var response = await sender.Send(command);
+
+        if (response == null)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    #region Food Portion
+
+    /// <summary>
     /// Get the food portion by Id
     /// </summary>
     /// <param name="foodPortionId">Food Portion Id</param>
@@ -110,11 +140,18 @@ public class FoodTrackingController(ISender sender, IHttpContextAccessor httpCon
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RegisterFoodPortionResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterFoodPortion([FromBody] RegisterFoodPortionCommand command)
+    public async Task<IActionResult> RegisterFoodPortion([FromBody] Application.Handlers.FoodPortion.RegisterFoodPortionCommand command)
     {
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
+
         var response = await sender.Send(command);
 
         return CreatedAtRoute(nameof(GetFoodPortionById), new { foodPortionId = response.Id }, response);
     }
 
 }
+
+#endregion
