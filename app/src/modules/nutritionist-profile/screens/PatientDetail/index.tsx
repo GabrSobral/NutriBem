@@ -1,43 +1,82 @@
-import { StatusBar } from "expo-status-bar";
-import { Ionicons } from "@expo/vector-icons";
-import { Image, ScrollView, useColorScheme, View } from "react-native";
+import { useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { Image, ScrollView, useColorScheme, View } from 'react-native';
 
-import { FoodPlans } from "./components/FoodPlans";
-import { Button } from "@/components/design-system/Button";
-import { AppHeader } from "@/components/design-system/AppHeader";
+import { FoodPlans } from './components/FoodPlans';
+import { Button } from '@/components/design-system/Button';
+import { AppHeader } from '@/components/design-system/AppHeader';
 
-import { Colors } from "@/constants/Colors";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Colors } from '@/constants/Colors';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-import { styles } from "./style";
+import { useNutritionistProfile } from '../../contexts/profile/hook';
+import { IPatient } from '../../contexts/profile/reducers/patients-reducer';
+
+import { styles } from './style';
 
 export function PatientDetail() {
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    "background"
-  );
+	const navigation = useNavigation();
+	const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
 
-  const colorScheme = useColorScheme();
+	const { patientId } = useLocalSearchParams() as any as {
+		patientId: IPatient['id'];
+	};
 
-  return (
-    <View style={{ backgroundColor, flex: 1 }}>
-      <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
-      <AppHeader title="Gabriel Sobral" />
+	const colorScheme = useColorScheme() as 'light' | 'dark';
+	const { patientsQueryResult, patientsDispatch, patientsState } = useNutritionistProfile();
 
-      <ScrollView>
-        <View style={styles.container}>
-          <Image
-            source={{ uri: "https://github.com/GabrSobral.png" }}
-            style={styles.profileImage}
-          />
+	useEffect(() => {
+		if (patientId && patientsQueryResult?.data && patientsQueryResult.data.length > 0) {
+			patientsDispatch({
+				type: 'SELECT_PATIENT',
+				payload: patientsQueryResult?.data?.find(patient => patient.id === patientId) || null,
+			});
+		}
+	}, [patientId, patientsQueryResult?.data]);
 
-          <FoodPlans />
+	return (
+		<View style={{ backgroundColor, flex: 1 }}>
+			<StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
+			<AppHeader
+				title={`${patientsState.selectedPatient?.firstName || ''} ${patientsState.selectedPatient?.lastName || ''}`}
+			/>
 
-          <Button icon={<Ionicons name="add" size={24} color="white" />}>
-            Criar plano alimentar
-          </Button>
-        </View>
-      </ScrollView>
-    </View>
-  );
+			<ScrollView>
+				<View style={styles.container}>
+					{patientsState.selectedPatient?.photoUrl ? (
+						<Image
+							resizeMode="cover"
+							source={{ uri: patientsState.selectedPatient?.photoUrl }}
+							style={styles.profileImage}
+						/>
+					) : (
+						<View style={[styles.profileImage, { backgroundColor: '#00000010' }]}>
+							<Ionicons
+								name="person"
+								size={64}
+								color={Colors.light.primary}
+							/>
+						</View>
+					)}
+
+					<FoodPlans patientId={patientId} />
+
+					<Button
+						icon={
+							<Ionicons
+								name="add"
+								size={24}
+								color="white"
+							/>
+						}
+						onPress={() => navigation.navigate('diet-plan/add-diet-plan', { patientId })}
+					>
+						Criar plano alimentar
+					</Button>
+				</View>
+			</ScrollView>
+		</View>
+	);
 }

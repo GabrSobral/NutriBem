@@ -1,83 +1,131 @@
-import { Link } from "expo-router";
-import { View } from "react-native";
-import { SvgUri } from "react-native-svg";
-import { Ionicons } from "@expo/vector-icons";
-import Animated from "react-native-reanimated";
-import { RectButton, Swipeable } from "react-native-gesture-handler";
+import { Link } from 'expo-router';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
+import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
-import { ThemedText } from "@/components/design-system/ThemedText";
-import { ThemedView } from "@/components/design-system/ThemedView";
+import { ThemedText } from '@/components/design-system/ThemedText';
+import { ThemedView } from '@/components/design-system/ThemedView';
 
-import { useHome } from "@/modules/home/contexts/hook";
-import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
+import { useHome } from '@/modules/home/contexts/hook';
 
-import { styles } from "./style";
-import { Breakfast } from "./Breakfast";
-import { Lunch } from "./Lunch";
-import { Dinner } from "./Dinner";
-import { Snack } from "./Snack";
+import { styles } from './style';
+import { Breakfast } from './Breakfast';
+import { Lunch } from './Lunch';
+import { Dinner } from './Dinner';
+import { Snack } from './Snack';
+import { IMealApi } from '@/modules/home/services/get-meals';
+import { useState } from 'react';
 
 interface Props {
-  drag: () => void;
-  handleRemove: () => void;
-  meal: IMeal;
+	drag: () => void;
+	disabled: boolean;
+	handleRemove: () => Promise<void>;
+	meal: IMealApi;
 }
 
-export function FoodListItem({ drag, handleRemove, meal }: Props) {
-  const { homeDispatch } = useHome();
+export function FoodListItem({ drag, handleRemove, meal, disabled }: Props) {
+	const { homeDispatch } = useHome();
+	const [isDeleting, setIsDeleting] = useState(false);
 
-  const totalKcal = meal.eatenFoods
-    .map((item) => item.serving.calories)
-    .reduce((a, b) => Number(a) + Number(b), 0);
+	const totalKcal = meal.eatenFoods
+		.map(item => Number(item.servingCalories) * item.quantity)
+		.reduce((a, b) => Number(a) + Number(b), 0);
 
-  return (
-    <Swipeable
-      overshootRight={false}
-      renderRightActions={() => (
-        <Animated.View>
-          <RectButton style={styles.buttonRemove} onPress={handleRemove}>
-            <Ionicons name="trash-outline" size={32} color="white" />
-          </RectButton>
-        </Animated.View>
-      )}
-      >
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.imageContainer}>
-          {meal.name === "Café da manhã" && <Breakfast/>}
-          {meal.name === "Almoço" && <Lunch/>}
-          {meal.name === "Jantar" && <Dinner/>}
-          {meal.name === "Lanche" && <Snack/>}
-        </ThemedView>
+	async function remove() {
+		setIsDeleting(true);
+		await handleRemove();
+		setIsDeleting(false);
+	}
 
-        <View>
-          <ThemedText type="subtitle" style={styles.title}>
-            {meal.name}
-          </ThemedText>
+	return (
+		<Swipeable
+			overshootRight={false}
+			shouldCancelWhenOutside={true}
+			enabled={meal.dietPlanFoods.length === 0}
+			renderRightActions={() => (
+				<Animated.View>
+					{isDeleting ? (
+						<ActivityIndicator
+							size={'large'}
+							color="white"
+						/>
+					) : (
+						<RectButton
+							style={styles.buttonRemove}
+							onPress={remove}
+						>
+							<Ionicons
+								name="trash-outline"
+								size={32}
+								color="white"
+							/>
+						</RectButton>
+					)}
+				</Animated.View>
+			)}
+		>
+			<TouchableOpacity
+				activeOpacity={1}
+				onLongPress={drag}
+				disabled={disabled}
+			>
+				<ThemedView style={styles.container}>
+					<ThemedView style={styles.imageContainer}>
+						{meal.name === 'Café da manhã' && <Breakfast />}
+						{meal.name === 'Almoço' && <Lunch />}
+						{meal.name === 'Jantar' && <Dinner />}
+						{meal.name === 'Lanche' && <Snack />}
+					</ThemedView>
 
-          <ThemedText style={{ fontWeight: "bold" }}>
-            {totalKcal}/{meal.maxKcal} kcal
-          </ThemedText>
-        </View>
+					<View>
+						<ThemedText
+							type="subtitle"
+							style={styles.title}
+						>
+							{meal.name}
+						</ThemedText>
 
-        <Link
-          style={styles.addButton}
-          href={{
-            pathname: "/user/home/add-meal",
-            params: meal.id,
-          }}
-          aria-label="Adicionar alimento"
-          onPress={() => {
-            homeDispatch({ type: "SELECT_MEAL", payload: meal });
-          }}
-        >
-          <Ionicons name="add" size={32} color="white" />
-        </Link>
+						<ThemedText style={{ fontWeight: 'bold' }}>
+							{totalKcal}/{meal.maxKcal} kcal
+						</ThemedText>
+					</View>
 
-        <ThemedText style={styles.swipeText}>
-          <Ionicons name="arrow-back" />
-          Arraste
-        </ThemedText>
-      </ThemedView>
-    </Swipeable>
-  );
+					<Link
+						style={styles.addButton}
+						href={{
+							pathname: '/user/home/add-meal',
+							params: meal.id,
+						}}
+						aria-label="Adicionar alimento"
+						onPress={() => {
+							homeDispatch({ type: 'SELECT_MEAL', payload: meal });
+						}}
+					>
+						<Ionicons
+							name="add"
+							size={32}
+							color="white"
+						/>
+					</Link>
+
+					{meal.dietPlanFoods.length === 0 ? (
+						<ThemedText style={styles.swipeText}>
+							<Ionicons name="arrow-back" />
+							<Ionicons name="arrow-up" />
+							<Ionicons name="arrow-down" />
+							Arraste e solte
+						</ThemedText>
+					) : (
+						<ThemedText
+							style={[styles.swipeText, { color: 'green' }]}
+							type="defaultSemiBold"
+						>
+							Sugerido pelo plano
+						</ThemedText>
+					)}
+				</ThemedView>
+			</TouchableOpacity>
+		</Swipeable>
+	);
 }

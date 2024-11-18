@@ -1,112 +1,133 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useNavigation } from "expo-router";
-import { Image, Pressable, StatusBar, View } from "react-native";
+import { useEffect, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import { Image, StatusBar, View } from 'react-native';
 
-import { Input } from "@/components/design-system/Input";
-import { ThemedText } from "@/components/design-system/ThemedText";
-import { ThemedView } from "@/components/design-system/ThemedView";
-import ParallaxScrollView from "@/components/design-system/ParallaxScrollView";
+import { ThemedText } from '@/components/design-system/ThemedText';
+import { ThemedView } from '@/components/design-system/ThemedView';
+import ParallaxScrollView from '@/components/design-system/ParallaxScrollView';
 
-import { styles } from "./styles";
-import { useNutritionist } from "../../contexts/nutri/hook";
+import { useNutritionist } from '../../contexts/nutri/hook';
+import { associateNutritionistApi } from '@/modules/home/services/associate-nutritionist';
+
+import { useAuth } from '@/contexts/AuthContext/hook';
+
+import { styles } from './styles';
+import { ConnectToNutri } from './ConnectToNutri';
+import { ProfileDontFilled } from './ProfileDontFilled';
 
 export function NotConnectedScreen() {
-  const { navigate } = useNavigation();
-  const { nutritionistDispatch } = useNutritionist();
+	const { accessToken, user } = useAuth();
+	const { nutritionistDispatch } = useNutritionist();
 
-  async function handleConnectNutri() {
-    nutritionistDispatch({ type: "SELECT_CURRENT_NUTRITIONIST", payload: {} });
-  }
+	const [code, setCode] = useState('');
+	const [errorMessage, setErrorMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <Image
-          source={require("../../../../assets/images/nutri-background.jpg")}
-          style={{ flex: 1, width: "100%", height: 300 }}
-          height={300}
-          width={300}
-        />
-      }
-    >
-      <StatusBar animated barStyle={"dark-content"} />
+	const params = useLocalSearchParams() as any as { code: string };
 
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Nutricionista</ThemedText>
-      </ThemedView>
+	useEffect(() => {
+		if (params.code) {
+			setCode(params.code);
+		}
+	}, [params]);
 
-      <ThemedText>
-        Você pode se vincular a um nutricionista para receber:
-      </ThemedText>
+	async function handleConnectNutri() {
+		setIsLoading(true);
+		try {
+			var nutritionist = await associateNutritionistApi({ nutritionistId: code }, { accessToken: accessToken || '' });
+			nutritionistDispatch({ type: 'SELECT_CURRENT_NUTRITIONIST', payload: nutritionist });
+		} catch (error) {
+			console.log(error);
 
-      <ThemedView style={{ gap: 4 }}>
-        <View style={[styles.nutriBadge, { backgroundColor: "#4682B4" }]}>
-          <Ionicons name="stats-chart" size={24} color="white" />
-          <ThemedText style={{ color: "white" }} type="defaultSemiBold">
-            Acompanhamento sobre seu progresso
-          </ThemedText>
-        </View>
+			setErrorMessage('Não foi possível conectar-se ao nutricionista. Verifique o código e tente novamente.');
+			setTimeout(() => setErrorMessage(''), 5000);
+		} finally {
+			setIsLoading(false);
+		}
+	}
 
-        <View style={[styles.nutriBadge, { backgroundColor: "#4682B4" }]}>
-          <Ionicons name="restaurant" size={24} color="white" />
-          <ThemedText style={{ color: "white" }} type="defaultSemiBold">
-            Planos alimentares personalizados
-          </ThemedText>
-        </View>
+	return (
+		<ParallaxScrollView
+			headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
+			headerImage={
+				<Image
+					source={require('../../../../assets/images/nutri-background.jpg')}
+					style={{ flex: 1, width: '100%', height: 300 }}
+					height={300}
+					width={300}
+				/>
+			}
+		>
+			<StatusBar
+				animated
+				barStyle={'dark-content'}
+			/>
 
-        <View style={[styles.nutriBadge, { backgroundColor: "#4682B4" }]}>
-          <Ionicons name="chatbox" size={24} color="white" />
-          <ThemedText style={{ color: "white" }} type="defaultSemiBold">
-            Chat para tirar dúvidas
-          </ThemedText>
-        </View>
-      </ThemedView>
+			<ThemedView style={styles.titleContainer}>
+				<ThemedText type="title">Nutricionista</ThemedText>
+			</ThemedView>
 
-      <ThemedText>
-        Conecte-se a um nutricionista apontando a sua camera ou digitando o
-        código de vínculo.
-      </ThemedText>
+			<ThemedText>Você pode se vincular a um nutricionista para receber:</ThemedText>
 
-      <View style={styles.scanContainer}>
-        <Input.Group style={{ flex: 1 }}>
-          <Input.Label style={{ fontWeight: "bold" }}>
-            Código de vínculo
-          </Input.Label>
+			<ThemedView style={{ gap: 4 }}>
+				<View style={[styles.nutriBadge, { backgroundColor: '#4682B4' }]}>
+					<Ionicons
+						name="stats-chart"
+						size={24}
+						color="white"
+					/>
+					<ThemedText
+						style={{ color: 'white' }}
+						type="defaultSemiBold"
+					>
+						Acompanhamento sobre seu progresso
+					</ThemedText>
+				</View>
 
-          <Input.Wrapper>
-            <Input
-              placeholder="Digite o código de vínculo..."
-              style={{ flex: 1 }}
-            />
-          </Input.Wrapper>
-        </Input.Group>
+				<View style={[styles.nutriBadge, { backgroundColor: '#4682B4' }]}>
+					<Ionicons
+						name="restaurant"
+						size={24}
+						color="white"
+					/>
+					<ThemedText
+						style={{ color: 'white' }}
+						type="defaultSemiBold"
+					>
+						Planos alimentares personalizados
+					</ThemedText>
+				</View>
 
-        <Link asChild href="/user/nutri/scan-code">
-          <Pressable
-            style={styles.scanCodeButton}
-            aria-label="Escanear código de vínculo"
-            android_ripple={{ color: "white" }}
-          >
-            <Ionicons name="qr-code-outline" size={24} />
-          </Pressable>
-        </Link>
-      </View>
+				<View style={[styles.nutriBadge, { backgroundColor: '#4682B4' }]}>
+					<Ionicons
+						name="chatbox"
+						size={24}
+						color="white"
+					/>
+					<ThemedText
+						style={{ color: 'white' }}
+						type="defaultSemiBold"
+					>
+						Chat para tirar dúvidas
+					</ThemedText>
+				</View>
+			</ThemedView>
 
-      <Pressable
-        style={styles.nutriConnectButton}
-        android_ripple={{ color: "white" }}
-        onPress={handleConnectNutri}
-      >
-        <Ionicons name="link" size={24} color="white" />
+			<ThemedText>Conecte-se a um nutricionista apontando a sua camera ou digitando o código de vínculo.</ThemedText>
 
-        <ThemedText
-          style={{ color: "white", fontSize: 18 }}
-          type="defaultSemiBold"
-        >
-          Conectar-se ao nutricionista
-        </ThemedText>
-      </Pressable>
-    </ParallaxScrollView>
-  );
+			{user?.weight && user?.height && user.mainObjective && user.address && user.sex && user.age ? (
+				<ConnectToNutri
+					code={code}
+					isLoading={isLoading}
+					setCode={setCode}
+					errorMessage={errorMessage}
+					handleConnectNutri={handleConnectNutri}
+					setErrorMessage={setErrorMessage}
+				/>
+			) : (
+				<ProfileDontFilled />
+			)}
+		</ParallaxScrollView>
+	);
 }

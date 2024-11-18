@@ -1,91 +1,166 @@
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useNavigation } from "expo-router";
+import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Link, useNavigation } from 'expo-router';
 
-import { Colors } from "@/constants/Colors";
-import { ThemedText } from "@/components/design-system/ThemedText";
+import { Colors } from '@/constants/Colors';
+import { ThemedText } from '@/components/design-system/ThemedText';
 
-import { styles } from "./style";
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function AuthenticationScreen() {
-  const colorScheme = useColorScheme();
-  const { navigate } = useNavigation();
+	const { navigate } = useNavigation();
+	const colorScheme = useColorScheme() as 'light' | 'dark';
 
-  return (
-    <ScrollView style={styles.container}>
-      <StatusBar barStyle={"dark-content"} />
+	const backgroundColor = useThemeColor({ dark: Colors.dark.background, light: Colors.light.background }, 'background');
 
-      <Image
-        source={require("../../assets/images/Logo.png")}
-        alt="NutriBem logotipo"
-        height={200}
-        width={200}
-        style={{ width: 200, height: 200, marginHorizontal: "auto" }}
-      />
+	return (
+		<ScrollView style={[styles.container, { backgroundColor }]}>
+			<StatusBar barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} />
 
-      <Text style={styles.title}>Bem vindo!</Text>
+			<Image
+				source={require('../../assets/images/Logo.png')}
+				alt="NutriBem logotipo"
+				height={200}
+				width={200}
+				style={{ width: 200, height: 200, marginHorizontal: 'auto' }}
+			/>
 
-      <ThemedText style={styles.description}>
-        Escolha sua forma de entrar.
-      </ThemedText>
+			<Text style={styles.title}>Bem vindo!</Text>
 
-      <Link asChild href={"/auth/sign-in"}>
-        <Pressable
-          style={styles.submitButton}
-          android_ripple={{ color: "#FFF", borderless: false }}
-        >
-          <Ionicons name="mail" size={24} color={"white"} />
-          <Text style={{ color: "#FFF", fontWeight: "semibold", fontSize: 18 }}>
-            Entrar com e-mail
-          </Text>
-        </Pressable>
-      </Link>
+			<ThemedText style={styles.description}>Escolha sua forma de entrar.</ThemedText>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 12,
-          marginVertical: 12,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            height: 1,
-            backgroundColor: "#00000033",
-          }}
-        />
-        <ThemedText>Ou</ThemedText>
-        <View style={{ flex: 1, height: 1, backgroundColor: "#00000033" }} />
-      </View>
+			<Link
+				asChild
+				href={{
+					pathname: '/auth/sign-in',
+					params: { isNutritionist: false },
+				}}
+			>
+				<Pressable
+					style={styles.submitButton}
+					android_ripple={{ color: '#FFF', borderless: false }}
+				>
+					<Ionicons
+						name="log-in"
+						size={24}
+						color={'white'}
+					/>
+					<Text style={{ color: '#FFF', fontWeight: 'semibold', fontSize: 18 }}>Entrar como usuário</Text>
+				</Pressable>
+			</Link>
 
-      <Pressable
-        style={styles.oauthButton}
-        android_ripple={{
-          color: Colors[colorScheme as "light" | "dark"].primary,
-          borderless: false,
-        }}
-        onPress={() => {}}
-      >
-        <Ionicons name="logo-google" size={24} />
-        <ThemedText style={{ fontWeight: "semibold", fontSize: 18 }}>
-          Entrar com Google
-        </ThemedText>
-      </Pressable>
+			<View
+				style={{
+					flexDirection: 'row',
+					alignItems: 'center',
+					gap: 12,
+					marginVertical: 12,
+				}}
+			>
+				<View
+					style={{
+						flex: 1,
+						width: '100%',
+						height: 1,
+						backgroundColor: '#00000033',
+					}}
+				/>
+				<ThemedText>Ou</ThemedText>
+				<View style={{ flex: 1, height: 1, backgroundColor: '#00000033' }} />
+			</View>
 
-      <Link href="/auth/sign-up" style={styles.signUpLink}>
-        Já possui cadastro? Entre já!
-      </Link>
-    </ScrollView>
-  );
+			<Link
+				href={{
+					pathname: '/auth/sign-in',
+					params: { isNutritionist: true },
+				}}
+				asChild
+			>
+				<Pressable
+					style={StyleSheet.flatten([styles.submitButton, { backgroundColor: Colors[colorScheme].primary }])}
+					android_ripple={{ color: '#FFF', borderless: false }}
+				>
+					<Ionicons
+						name="log-in"
+						size={24}
+						color={'white'}
+					/>
+					<Text style={{ color: '#FFF', fontWeight: 'semibold', fontSize: 18 }}>Entrar como nutricionista</Text>
+				</Pressable>
+			</Link>
+
+			<Link
+				href="/auth/sign-up"
+				style={[styles.signUpLink, { color: Colors[colorScheme].secondary }]}
+			>
+				Não possui cadastro? Cadastre-se!
+			</Link>
+		</ScrollView>
+	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 16,
+		backgroundColor: Colors.light.background,
+		paddingTop: 56,
+	},
+
+	title: {
+		fontSize: 28,
+		color: Colors.light.primary,
+		fontWeight: 'bold',
+		marginVertical: 16,
+		textAlign: 'left',
+		width: '100%',
+	},
+
+	description: {
+		fontSize: 16,
+	},
+
+	forgotPasswordContainer: {
+		width: '100%',
+		alignItems: 'flex-end',
+		marginTop: 12,
+	},
+
+	formWrapper: {
+		gap: 16,
+		width: '100%',
+		flex: 1,
+	},
+
+	submitButton: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		gap: 12,
+		width: '100%',
+		padding: 16,
+		borderRadius: 6,
+		backgroundColor: Colors.light.secondary,
+		alignItems: 'center',
+		marginTop: 16,
+	},
+
+	oauthButton: {
+		width: '100%',
+		padding: 16,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		gap: 12,
+		borderRadius: 6,
+		backgroundColor: 'transparent',
+		borderColor: Colors.light.primary,
+		borderWidth: 1,
+		alignItems: 'center',
+	},
+
+	signUpLink: {
+		marginTop: 18,
+		fontSize: 18,
+		fontWeight: 'semibold',
+		marginHorizontal: 'auto',
+	},
+});

@@ -21,11 +21,12 @@ export interface SearchedFood {
 
 export async function searchFood(
   { searchTerm }: Request,
-  { accessToken }: ServiceOptions
+  { accessToken, cancellationToken }: ServiceOptions
 ): Promise<SearchedFood> {
   const response = await fetch(
     `https://platform.fatsecret.com/rest/foods/search/v1?format=json&search_expression=${searchTerm}`,
     {
+      signal: cancellationToken,
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,6 +34,9 @@ export async function searchFood(
       },
     }
   );
+
+  if (!response.ok)
+    throw new Error(response?.body?.toString() || "Erro ao buscar alimentos.");
 
   return (await response.json()) as Promise<SearchedFood>;
 }

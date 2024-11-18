@@ -18,7 +18,7 @@ interface Props extends PressableProps {
 }
 
 export function Button({ children, icon, ...rest }: Props) {
-  const { style } = rest;
+  const { style, disabled } = rest;
   const colorScheme = useColorScheme();
 
   return (
@@ -28,6 +28,7 @@ export function Button({ children, icon, ...rest }: Props) {
       style={StyleSheet.flatten([
         styles.submitButton,
         { backgroundColor: Colors[colorScheme as "light" | "dark"].secondary },
+        disabled && { opacity: 0.6 },
         style as StyleProp<ViewStyle>,
       ])}
     >

@@ -5,30 +5,5 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-  mealTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    letterSpacing: 1,
-  },
-  mealDescription: {
-    fontSize: 13,
-  },
-
-  imageContainer: {
-    width: "100%",
-    height: 96,
-    backgroundColor: "#00000030",
-    borderTopRightRadius: 12,
-    borderTopLeftRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: "auto",
-  },
-  mealButton: {
-    backgroundColor: Colors.light.secondary,
-    borderRadius: 12,
-    flex: 1,
-    marginBottom: 8,
-  },
+  }
 });

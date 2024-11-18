@@ -10,6 +10,8 @@ export const styles = StyleSheet.create({
     width: 160,
     height: 160,
     borderRadius: 160 / 2,
-    marginHorizontal: "auto"
+    marginHorizontal: "auto",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

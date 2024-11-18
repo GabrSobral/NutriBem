@@ -1,45 +1,58 @@
-import { Pressable } from "react-native";
-import { useNavigation } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { DietPlanItem } from './components/DietPlanItem';
+import { ProfileHeader } from './components/ProfileHeader';
 
-import { ProfileHeader } from "./components/ProfileHeader";
-import { ThemedText } from "@/components/design-system/ThemedText";
-import ParallaxScrollView from "@/components/design-system/ParallaxScrollView";
+import { ThemedText } from '@/components/design-system/ThemedText';
+import ParallaxScrollView from '@/components/design-system/ParallaxScrollView';
 
-import { Colors } from "@/constants/Colors";
-
-import { styles } from "./style";
-import { DietPlanItem } from "./components/DietPlanItem";
+import { Colors } from '@/constants/Colors';
+import { useNutritionist } from '../../contexts/nutri/hook';
+import { useColorScheme, View } from 'react-native';
 
 export function NutriProfile() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{
-        light: Colors.light.primary,
-        dark: Colors.dark.primary,
-      }}
-      headerHeight={300}
-      headerImage={<ProfileHeader />}
-    >
-      <ThemedText type="title">Planos alimentares</ThemedText>
+	const colorScheme = useColorScheme() as 'light' | 'dark';
+	const { nutritionistState } = useNutritionist();
 
-      <ThemedText>
-        Receba planos alimentares personalizados criados pelo seu nutricionista
-        para atender às suas necessidades e objetivos específicos.
-      </ThemedText>
+	return (
+		<ParallaxScrollView
+			headerBackgroundColor={{
+				light: Colors.light.secondary,
+				dark: Colors.dark.secondary,
+			}}
+			headerHeight={300}
+			headerImage={<ProfileHeader />}
+		>
+			<ThemedText type="title">Planos alimentares</ThemedText>
 
-      <DietPlanItem />
+			<ThemedText>
+				Receba planos alimentares personalizados criados pelo seu nutricionista para atender às suas necessidades e
+				objetivos específicos.
+			</ThemedText>
 
-      {/* <Pressable style={styles.chatButton} android_ripple={{ color: "white" }}>
-        <Ionicons name="chatbox-outline" size={24} color="white" />
+			{nutritionistState.currentNutritionist?.dietPlan.length === 0 && (
+				<View
+					style={{
+						backgroundColor: Colors[colorScheme].background,
+						padding: 12,
+						borderWidth: 1,
+						borderColor: Colors[colorScheme].primary,
+						borderRadius: 8,
+					}}
+				>
+					<ThemedText
+						type="defaultSemiBold"
+						style={{ textAlign: 'center' }}
+					>
+						Nenhum plano alimentar disponível. Peça para seu nutricionista montar um para você.
+					</ThemedText>
+				</View>
+			)}
 
-        <ThemedText
-          style={{ color: "white", fontSize: 18 }}
-          type="defaultSemiBold"
-        >
-          Chat com nutricionista
-        </ThemedText>
-      </Pressable> */}
-    </ParallaxScrollView>
-  );
+			{nutritionistState.dietPlans.map(dietPlan => (
+				<DietPlanItem
+					key={dietPlan.id}
+					dietPlan={dietPlan}
+				/>
+			))}
+		</ParallaxScrollView>
+	);
 }

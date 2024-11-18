@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <NutritionistProfileProvider>
       <DietPlanProvider>
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack screenOptions={{ headerShown: false, animation: "ios" }}>
           <Stack.Screen name="patient-detail" />
           <Stack.Screen name="diet-plan/index" />
           <Stack.Screen name="diet-plan/edit-diet-plan" />

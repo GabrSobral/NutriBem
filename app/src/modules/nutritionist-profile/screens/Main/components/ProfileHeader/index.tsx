@@ -1,56 +1,88 @@
-import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { styles } from "./style";
+import { styles } from './style';
+import { useAuth } from '@/contexts/AuthContext/hook';
 
 export function ProfileHeader() {
-  return (
-    <View style={styles.profileContainer}>
-      <Image
-        source={require("../../../../../../assets/images/background-primary.png")}
-        style={styles.profileBackgroundImage}
-      />
-      <Image
-        source={{ uri: "https://github.com/GabrSobral.png" }}
-        style={styles.profileImage}
-      />
+	const { user, signOutAsync } = useAuth();
 
-      <View style={styles.profileTextContainer}>
-        <Text style={styles.profileText}>
-          Olá, {""}
-          <Text
-            style={StyleSheet.flatten([
-              styles.profileText,
-              styles.profileTextName,
-            ])}
-          >
-            Gabriel Sobral
-          </Text>
-        </Text>
+	return (
+		<View style={styles.profileContainer}>
+			<Image
+				source={require('../../../../../../assets/images/background-primary.png')}
+				style={styles.profileBackgroundImage}
+			/>
+			{user?.photoUrl ? (
+				<Image
+					source={{ uri: user?.photoUrl }}
+					style={styles.profileImage}
+				/>
+			) : (
+				<View style={styles.profileImage}>
+					<Ionicons
+						name="person"
+						size={76}
+						color="white"
+					/>
+				</View>
+			)}
 
-        <View style={styles.profileLocationWrapper}>
-          <Ionicons name={"location"} size={18} color={"#FFF"} />
+			<View style={styles.profileTextContainer}>
+				<Text style={styles.profileText}>
+					Olá, {''}
+					<Text style={StyleSheet.flatten([styles.profileText, styles.profileTextName])}>
+						{user?.firstName} {user?.lastName}
+					</Text>
+				</Text>
 
-          <Text style={styles.profileLocationText}>Santos, SP</Text>
-        </View>
-      </View>
+				<View style={styles.profileLocationWrapper}>
+					<Ionicons
+						name={'location'}
+						size={18}
+						color={'#FFF'}
+					/>
 
-      <Link
-        href="/user/profile/edit-profile"
-        style={styles.profileEditButton}
-        aria-label="Editar perfil"
-      >
-        <Ionicons name={"create-outline"} size={32} color={"#FFF"} />
-      </Link>
+					<Text style={styles.profileLocationText}>{user?.address || 'Localização não registrada...'}</Text>
+				</View>
+			</View>
 
-      <Link
-        href="/nutritionist/qr-code"
-        style={styles.qrCodeEditButton}
-        aria-label="Editar perfil"
-      >
-        <Ionicons name={"qr-code-outline"} size={32} color={"#FFF"} />
-      </Link>
-    </View>
-  );
+			<Link
+				href="/user/profile/edit-profile"
+				style={styles.profileEditButton}
+				aria-label="Editar perfil"
+			>
+				<Ionicons
+					name={'create-outline'}
+					size={32}
+					color={'#FFF'}
+				/>
+			</Link>
+
+			<TouchableOpacity
+				style={styles.profileLogoutButton}
+				aria-label="Sair"
+				onPress={signOutAsync}
+			>
+				<Ionicons
+					name={'log-out-outline'}
+					size={32}
+					color={'#FFF'}
+				/>
+			</TouchableOpacity>
+
+			<Link
+				href="/nutritionist/qr-code"
+				style={styles.qrCodeEditButton}
+				aria-label="Editar perfil"
+			>
+				<Ionicons
+					name={'qr-code-outline'}
+					size={32}
+					color={'#FFF'}
+				/>
+			</Link>
+		</View>
+	);
 }

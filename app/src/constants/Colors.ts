@@ -11,6 +11,7 @@ export const Colors = {
     text: "#11181C",
     placeholder: "#687076",
     primary: "#FF914D",
+    primarySoft: "#FCE6D9",
     secondary: "#003366",
 
     background: "#FAFAFA",
@@ -25,6 +26,7 @@ export const Colors = {
     text: "#ECEDEE",
     placeholder: "#9BA1A6",
     primary: "#FF914D",
+    primarySoft: "#412E20",
     secondary: "#4682B4",
 
     background: "#151718",

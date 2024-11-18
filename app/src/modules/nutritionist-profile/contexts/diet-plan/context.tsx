@@ -1,50 +1,56 @@
-import { createContext, Dispatch, ReactNode, useReducer } from "react";
-import { EditDietPlanActions, editDietPlanReducer, EditDietPlanState, initialEditDietPlanState } from "./reducers/edit-diet-plan-reducer";
-import { SearchedFood, searchFood } from "@/modules/home/services/search-food";
-import { useAuth } from "@/contexts/AuthContext/hook";
+import { createContext, Dispatch, ReactNode, useReducer } from 'react';
+import { DietPlanActions, dietPlanReducer, dietPlanInitialState, DietPlanState } from './reducers/diet-plan-reducer';
+import { SearchedFood, searchFood } from '@/modules/home/services/search-food';
+import { useAuth } from '@/contexts/AuthContext/hook';
 
 interface DietPlanContextProps {
-  editDietPlanState: EditDietPlanState;
-  editDietPlanDispatch: Dispatch<EditDietPlanActions>;
+	dietPlanState: DietPlanState;
+	dietPlanDispatch: Dispatch<DietPlanActions>;
 
-  searchFoodAsync: (searchValue: string) => Promise<SearchedFood>;
+	editDietPlanState: DietPlanState;
+	editDietPlanDispatch: Dispatch<DietPlanActions>;
+
+	searchFoodAsync: (searchValue: string, signal: AbortSignal) => Promise<SearchedFood | null>;
 }
 
-export const DietPlanContext = createContext(
-  {} as DietPlanContextProps
-);
+export const DietPlanContext = createContext({} as DietPlanContextProps);
 
 interface DietPlanProviderProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
-export function DietPlanProvider({
-  children,
-}: DietPlanProviderProps) {
-  const { fatSecretToken } = useAuth();
-  const [ editDietPlanState, editDietPlanDispatch ] = useReducer(editDietPlanReducer, initialEditDietPlanState);
+export function DietPlanProvider({ children }: DietPlanProviderProps) {
+	const { fatSecretToken } = useAuth();
+	const [dietPlanState, dietPlanDispatch] = useReducer(dietPlanReducer, dietPlanInitialState);
+	const [editDietPlanState, editDietPlanDispatch] = useReducer(dietPlanReducer, dietPlanInitialState);
 
-  async function searchFoodAsync(searchValue: string) {
-    const foods = await searchFood(
-      { searchTerm: searchValue },
-      { accessToken: fatSecretToken?.access_token }
-    );
+	async function searchFoodAsync(searchValue: string, signal: AbortSignal) {
+		try {
+			const foods = await searchFood(
+				{ searchTerm: searchValue },
+				{ accessToken: fatSecretToken?.access_token, cancellationToken: signal }
+			);
 
-    console.log({ foods });
+			return foods;
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
 
-    return foods;
-  }
+	return (
+		<DietPlanContext.Provider
+			value={{
+				dietPlanState,
+				dietPlanDispatch,
 
-  return (
-    <DietPlanContext.Provider
-      value={{
-        editDietPlanState,
-        editDietPlanDispatch,
+				editDietPlanDispatch,
+				editDietPlanState,
 
-        searchFoodAsync
-      }}
-    >
-      {children}
-    </DietPlanContext.Provider>
-  );
+				searchFoodAsync,
+			}}
+		>
+			{children}
+		</DietPlanContext.Provider>
+	);
 }

@@ -1,127 +1,145 @@
-import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { Pressable, ScrollView, useColorScheme, View } from "react-native";
+import dayjs from 'dayjs';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { Pressable, ScrollView, useColorScheme, View } from 'react-native';
 
-import { AppHeader } from "@/components/design-system/AppHeader";
-import { ThemedText } from "@/components/design-system/ThemedText";
-import { ThemedView } from "@/components/design-system/ThemedView";
+import { AppHeader } from '@/components/design-system/AppHeader';
+import { ThemedText } from '@/components/design-system/ThemedText';
+import { ThemedView } from '@/components/design-system/ThemedView';
 
-import { IMeal } from "@/modules/home/contexts/reducers/home-reducer";
-import { MacroNutrientsChart } from "@/modules/home/screens/FoodDetail/components/MacroNutrientsChart";
+import { MacroNutrientsChart } from '@/modules/home/screens/FoodDetail/components/MacroNutrientsChart';
 
-import { Colors } from "@/constants/Colors";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Colors } from '@/constants/Colors';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-import { FoodItem } from "./components/FoodItem";
+import { FoodItem } from './components/FoodItem';
 
-import { styles } from "./style";
+import { styles } from './style';
+import { useNutritionistDietPlan } from '../../contexts/diet-plan/hook';
 
 export function DietPlan() {
-  const navigation = useNavigation();
-  const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    "background"
-  );
+	const navigation = useNavigation();
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
+	const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
 
+	const { dietPlanState } = useNutritionistDietPlan();
+	const selectedDietPlan = dietPlanState.selectedDietPlan;
+	const { dietPlanId, patientId } = useLocalSearchParams() as any as {
+		dietPlanId: string;
+		patientId: string;
+	};
 
-  return (
-    <View style={{ backgroundColor, flex: 1 }}>
-      <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
+	const ingestedKcal = selectedDietPlan?.meals
+		.flatMap(meal => meal.foods)
+		.map(item => Number(item.servingCalories) * item.quantity)
+		.reduce((a, b) => Number(a) + Number(b), 0);
 
-      <AppHeader
-        title="Plano Alimentar A"
-        button={
-          <Pressable
-            android_ripple={{
-              color: Colors.light.primary,
-              borderless: false,
-              radius: 18,
-            }}
-            aria-label="Editar"
-            style={{ padding: 6, borderRadius: 20 }}
-            onPress={() => navigation.navigate("diet-plan/edit-diet-plan")}
-          >
-            <Ionicons name="create-outline" size={24} />
-          </Pressable>
-        }
-      />
+	const ingestedCarbs = selectedDietPlan?.meals
+		.flatMap(meal => meal.foods)
+		.map(item => Number(item.servingCarbohydrates) * item.quantity)
+		.reduce((a, b) => Number(a) + Number(b), 0);
 
-      <ScrollView>
-        <View style={styles.container}>
-          <View>
-            <ThemedText type="title">Gabriel Sobral</ThemedText>
+	const ingestedFats = selectedDietPlan?.meals
+		.flatMap(meal => meal.foods)
+		.map(item => Number(item.servingFats) * item.quantity)
+		.reduce((a, b) => Number(a) + Number(b), 0);
 
-            <View
-              style={{ flexDirection: "row", gap: 8, alignItems: "center" }}
-            >
-              <ThemedText>28/07/2024</ThemedText>
-              <Ionicons
-                name="arrow-forward"
-                size={18}
-                color={Colors.light.primary}
-              />
-              <ThemedText>28/08/2024</ThemedText>
-            </View>
-          </View>
+	const ingestedProteins = selectedDietPlan?.meals
+		.flatMap(meal => meal.foods)
+		.map(item => Number(item.servingProteins) * item.quantity)
+		.reduce((a, b) => Number(a) + Number(b), 0);
 
-          <View style={{ gap: 12 }}>
-            <ThemedText type="subtitle">Descrição</ThemedText>
+	return (
+		<View style={{ backgroundColor, flex: 1 }}>
+			<StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
 
-            <ThemedText>
-              Este plano alimentar foi desenvolvido para promover a perda de
-              peso de forma saudável e sustentável. Seguir as orientações abaixo
-              ajudará a atingir os objetivos estabelecidos.
-            </ThemedText>
-          </View>
+			<AppHeader
+				title={selectedDietPlan?.name || ''}
+				button={
+					<Pressable
+						android_ripple={{
+							color: Colors.light.primary,
+							borderless: false,
+							radius: 18,
+						}}
+						aria-label="Editar"
+						style={{ padding: 6, borderRadius: 20 }}
+						onPress={() => navigation.navigate('diet-plan/edit-diet-plan', { dietPlanId, patientId })}
+					>
+						<Ionicons
+							name="create-outline"
+							size={24}
+							color={textColor}
+						/>
+					</Pressable>
+				}
+			/>
 
-          <View style={{ gap: 12 }}>
-            <ThemedText type="subtitle">Refeições diárias</ThemedText>
+			<ScrollView>
+				<View style={styles.container}>
+					<View>
+						<ThemedText type="title">Gabriel Sobral</ThemedText>
 
-            <View style={{ gap: 8 }}>
-              <FoodItem
-                totalKcal={1500}
-                meal={{ name: "Café da manhã" } as IMeal}
-              />
-              <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
-              <FoodItem totalKcal={1500} meal={{ name: "Almoço" } as IMeal} />
-              <FoodItem totalKcal={1500} meal={{ name: "Lanche" } as IMeal} />
-              <FoodItem totalKcal={1500} meal={{ name: "Jantar" } as IMeal} />
-            </View>
-          </View>
+						<View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+							<ThemedText>{dayjs(selectedDietPlan?.startDate).format('DD/MM/YYYY')}</ThemedText>
+							<Ionicons
+								name="arrow-forward"
+								size={18}
+								color={Colors.light.primary}
+							/>
+							<ThemedText>{dayjs(selectedDietPlan?.endDate).format('DD/MM/YYYY')}</ThemedText>
+						</View>
+					</View>
 
-          <MacroNutrientsChart
-            calories={1500}
-            carbohydrates={0}
-            fats={0}
-            proteins={0}
-          />
+					<View style={{ gap: 12 }}>
+						<ThemedText type="subtitle">Descrição</ThemedText>
 
-          <ThemedText type="subtitle">Notas Adicionais</ThemedText>
-          <ThemedView
-            style={[
-              styles.additionalInformationContainer,
-              { backgroundColor: `${Colors.light.primary}10` },
-            ]}
-          >
-            <ThemedView style={styles.ingredientItem}>
-              <ThemedText type="defaultSemiBold">01.</ThemedText>
-              <ThemedText style={{ flex: 1 }}>
-                Evitar alimentos processados e açúcares refinados.
-              </ThemedText>
-            </ThemedView>
+						<ThemedText>{selectedDietPlan?.description || '-'}</ThemedText>
+					</View>
 
-            <ThemedView style={styles.ingredientItem}>
-              <ThemedText type="defaultSemiBold">02.</ThemedText>
-              <ThemedText style={{ flex: 1 }}>
-                Fazer as refeições em horários regulares para manter o
-                metabolismo ativo.
-              </ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </View>
-      </ScrollView>
-    </View>
-  );
+					<View style={{ gap: 12 }}>
+						<ThemedText type="subtitle">Refeições diárias</ThemedText>
+
+						<View style={{ gap: 8 }}>
+							{selectedDietPlan?.meals?.length === 0 && <ThemedText>Nenhuma refeição encontrada</ThemedText>}
+							{selectedDietPlan?.meals?.map(meal => (
+								<FoodItem
+									key={meal.id}
+									dietPlanId={dietPlanId}
+									meal={meal}
+								/>
+							))}
+						</View>
+					</View>
+
+					{selectedDietPlan?.meals && selectedDietPlan?.meals?.length > 0 && (
+						<MacroNutrientsChart
+							calories={ingestedKcal || 0}
+							carbohydrates={ingestedCarbs || 0}
+							fats={ingestedFats || 0}
+							proteins={ingestedProteins || 0}
+						/>
+					)}
+
+					<ThemedText type="subtitle">Notas Adicionais</ThemedText>
+					<ThemedView style={[styles.additionalInformationContainer, { backgroundColor: `${Colors.light.primary}10` }]}>
+						{selectedDietPlan?.additionalNote.split(';').length === 0 && (
+							<ThemedText>Nenhuma nota adicional encontrada</ThemedText>
+						)}
+						{selectedDietPlan?.additionalNote?.split(';').map((note, index) => (
+							<ThemedView
+								style={styles.ingredientItem}
+								key={index}
+							>
+								<ThemedText type="defaultSemiBold">{String(index).padStart(2, '0')}.</ThemedText>
+								<ThemedText style={{ flex: 1 }}>{note}</ThemedText>
+							</ThemedView>
+						))}
+					</ThemedView>
+				</View>
+			</ScrollView>
+		</View>
+	);
 }

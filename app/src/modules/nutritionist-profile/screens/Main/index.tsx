@@ -16,8 +16,6 @@ export function NutritionistProfileScreen() {
       headerImage={<ProfileHeader />}
     >
       <PatientList />
-
-      {/* <Link href="/auth">Settings</Link> */}
     </ParallaxScrollView>
   );
 }

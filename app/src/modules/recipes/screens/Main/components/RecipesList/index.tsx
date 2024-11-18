@@ -1,17 +1,23 @@
-import { View } from "react-native";
+import { View } from 'react-native';
 
-import { ThemedText } from "@/components/design-system/ThemedText";
-import { RecipeItem } from "./RecipeItem";
-import { styles } from "./style";
+import { ThemedText } from '@/components/design-system/ThemedText';
+import { RecipeItem } from './RecipeItem';
+import { styles } from './style';
+import { useRecipes } from '@/modules/recipes/contexts/hook';
 
 export function RecipesList() {
-  return (
-    <View style={styles.container}>
-      <ThemedText type="title">Inspire-se</ThemedText>
+	const { recipesState } = useRecipes();
 
-      {[1, 2, 3, 4].map((item) => (
-        <RecipeItem item={item} key={item}/>
-      ))}
-    </View>
-  );
+	return (
+		<View style={styles.container}>
+			<ThemedText type="title">Inspire-se</ThemedText>
+
+			{recipesState.recipes?.recipe.map(item => (
+				<RecipeItem
+					item={item}
+					key={item.recipe_id}
+				/>
+			))}
+		</View>
+	);
 }
