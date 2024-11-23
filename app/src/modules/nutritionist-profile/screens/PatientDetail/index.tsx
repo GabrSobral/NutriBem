@@ -15,6 +15,7 @@ import { useNutritionistProfile } from '../../contexts/profile/hook';
 import { IPatient } from '../../contexts/profile/reducers/patients-reducer';
 
 import { styles } from './style';
+import { ThemedText } from '@/components/design-system/ThemedText';
 
 export function PatientDetail() {
 	const navigation = useNavigation();
@@ -60,6 +61,28 @@ export function PatientDetail() {
 							/>
 						</View>
 					)}
+
+					<ThemedText
+						type="title"
+						style={styles.titleContainer}
+					>
+						Informações
+					</ThemedText>
+
+					<View
+						style={{
+							padding: 12,
+							backgroundColor: Colors[colorScheme].primarySoft,
+							borderColor: Colors[colorScheme].primary,
+							borderWidth: 1,
+							borderRadius: 12,
+						}}
+					>
+						<ThemedText>Localização: {patientsState.selectedPatient?.address}</ThemedText>
+						<ThemedText>Idade: {patientsState.selectedPatient?.age}</ThemedText>
+						<ThemedText>Altura: {patientsState.selectedPatient?.height}</ThemedText>
+						<ThemedText>Objetivo principal: {patientsState.selectedPatient?.mainObjective}</ThemedText>
+					</View>
 
 					<FoodPlans patientId={patientId} />
 

@@ -62,14 +62,13 @@ export function PatientItem({ item }: Props) {
 				</ThemedText>
 
 				<View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-					<ThemedText type="defaultSemiBold">Plano:</ThemedText>
-					<ThemedText>28/08/2024</ThemedText>
-					<Ionicons
-						name="arrow-forward"
-						size={18}
-						color={Colors.light.primary}
-					/>
-					<ThemedText>28/08/2024</ThemedText>
+					<ThemedText
+						type="default"
+						numberOfLines={2}
+					>
+						Objetivo:
+						{item.mainObjective}
+					</ThemedText>
 				</View>
 			</View>
 		</Pressable>

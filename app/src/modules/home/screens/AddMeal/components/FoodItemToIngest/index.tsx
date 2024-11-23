@@ -4,12 +4,16 @@ import { Pressable, View } from 'react-native';
 import { styles } from './style';
 import { Ionicons } from '@expo/vector-icons';
 import { IMealApi } from '@/modules/home/services/get-meals';
+import { useHome } from '@/modules/home/contexts/hook';
 
 interface Props {
 	item: IMealApi['eatenFoods'][number];
+	mealId: IMealApi['id'];
 }
 
-export function FoodItemToIngest({ item }: Props) {
+export function FoodItemToIngest({ item, mealId }: Props) {
+	const { homeDispatch } = useHome();
+
 	return (
 		<ThemedView style={[styles.container]}>
 			<View>
@@ -24,6 +28,10 @@ export function FoodItemToIngest({ item }: Props) {
 				<Pressable
 					android_ripple={{ color: 'white', borderless: false, radius: 20 }}
 					style={styles.addButton}
+					onPress={() => {
+						homeDispatch({ type: 'REMOVE_FOOD_FROM_DIET_MEAL', payload: { ...item, mealId } });
+						homeDispatch({ type: 'ADD_EATEN_FOOD_TO_MEAL', payload: { ...item, mealId } });
+					}}
 				>
 					<Ionicons
 						name="checkmark"

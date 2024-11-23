@@ -72,7 +72,7 @@ export function HomeProvider({ children }: HomeProviderProps) {
 			homeDispatch({ type: 'REMOVE_MEAL', payload: mealId });
 			await removeMealApi({ mealId }, { accessToken: accessToken || '' });
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	}
 

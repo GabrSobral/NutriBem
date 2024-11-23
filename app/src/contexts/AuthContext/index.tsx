@@ -234,7 +234,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		setAccessToken(null);
 		setRefreshToken(null);
 
-		router.dismissAll();
+		// router.dismissAll();
 		router.replace('/auth');
 	}, [router]);
 

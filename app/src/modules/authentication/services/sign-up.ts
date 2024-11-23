@@ -48,7 +48,6 @@ export async function signUpApi({
 
 		if (!response.ok) {
 			const errorBody = await response.json();
-			console.error(`Something went wrong: ${JSON.stringify(errorBody)}; ${errorBody.message}`);
 		}
 
 		const body = (await response.json()) as Response;

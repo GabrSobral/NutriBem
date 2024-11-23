@@ -157,6 +157,7 @@ export function AddMeal() {
 									<FoodItemToIngest
 										item={food}
 										key={food.id}
+										mealId={homeState.selectedMeal?.id || ''}
 									/>
 								))}
 							</View>
@@ -192,7 +193,7 @@ export function AddMeal() {
 						{homeState.selectedMeal?.eatenFoods.map(food => (
 							<FoodItem
 								item={food}
-								key={food.id}
+								key={food.foodId}
 								handleRemove={() =>
 									homeDispatch({
 										type: 'REMOVE_EATEN_FOOD_FROM_MEAL',

@@ -52,7 +52,6 @@ export function SignIn() {
 			if (error instanceof Error) {
 				if (error.message === 'Invalid credentials') setErrorMessage('E-mail/Senha inválidos');
 			} else {
-				console.error(error);
 				setErrorMessage('Erro desconhecido');
 			}
 		}

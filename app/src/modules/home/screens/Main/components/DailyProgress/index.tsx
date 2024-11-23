@@ -31,7 +31,7 @@ export function DailyProgress() {
 		.map(item => Number(item.servingProteins) * item.quantity)
 		.reduce((a, b) => Number(a) + Number(b), 0);
 
-	const percentage = (ingestedKcal / homeState.meals.reduce((a, b) => a + b.maxKcal || 2000, 0)) * 100;
+	const percentage = (ingestedKcal / homeState.meals.reduce((a, b) => a + b.maxKcal, 0)) * 100;
 
 	return (
 		<ThemedView style={style.container}>

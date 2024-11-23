@@ -28,7 +28,7 @@ export function NutriProfile() {
 				objetivos específicos.
 			</ThemedText>
 
-			{nutritionistState.currentNutritionist?.dietPlan.length === 0 && (
+			{nutritionistState.dietPlans.length === 0 && (
 				<View
 					style={{
 						backgroundColor: Colors[colorScheme].background,

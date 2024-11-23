@@ -55,7 +55,5 @@ export async function getMealsApi({ date }: Request, { accessToken }: ServiceOpt
 
 	const body = (await response.json()) as IDailyMeal<IMealApi>;
 
-	console.log({ body });
-
 	return body;
 }

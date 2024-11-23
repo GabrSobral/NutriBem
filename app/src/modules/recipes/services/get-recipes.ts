@@ -2,6 +2,7 @@ import { ServiceOptions } from '@/types/ServiceOptions';
 
 interface Request {
 	search: string;
+	recipeTypes: string[];
 }
 
 export interface Recipes {
@@ -31,11 +32,11 @@ export interface Recipes {
 }
 
 export async function getRecipes(
-	{ search }: Request,
+	{ search, recipeTypes }: Request,
 	{ accessToken, cancellationToken }: ServiceOptions
 ): Promise<Recipes> {
 	const response = await fetch(
-		`https://platform.fatsecret.com/rest/recipes/search/v3?format=json&search_expression=${search}&must_have_images=true`,
+		`https://platform.fatsecret.com/rest/recipes/search/v3?format=json&search_expression=${search}&must_have_images=true${recipeTypes.length > 0 ? `&recipe_types=${recipeTypes.join(',')}` : ''}`,
 		{
 			signal: cancellationToken,
 			method: 'GET',

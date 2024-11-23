@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Dropdown } from 'react-native-element-dropdown';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { ActivityIndicator, Pressable, Text, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, Text, useColorScheme, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
 import { Input } from '@/components/design-system/Input';
@@ -39,7 +39,7 @@ export function FoodDetail() {
 
 	const [selectedServing, setSelectedServing] = useState<Serving | null>(null);
 
-	const { foodId, isEditEnabled, foodQuantity, servingId, mealFoodId } = useLocalSearchParams() as any as {
+	const params = useLocalSearchParams() as any as {
 		foodId: IFood['food']['food_id'];
 		isEditEnabled?: 'true' | 'false';
 		foodQuantity?: string;
@@ -47,7 +47,10 @@ export function FoodDetail() {
 		mealFoodId?: string;
 	};
 
+	const { foodId, isEditEnabled, foodQuantity, servingId, mealFoodId } = params;
+
 	const [currentFood, setCurrentFood] = useState<IFood | null>(null);
+	console.log({ currentFood: selectedServing });
 
 	const colorScheme = useColorScheme();
 	const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
@@ -84,7 +87,6 @@ export function FoodDetail() {
 		const mealFood: IMealApi['eatenFoods'][number] & { mealId: string } = {
 			id: '',
 			mealId: homeState.selectedMeal.id,
-			maxKcal: 0,
 			foodId: currentFood['food']['food_id'],
 			foodName: currentFood['food']['food_name'],
 			quantity: quantity,
@@ -114,13 +116,12 @@ export function FoodDetail() {
 					servingCarbohydrates: mealFood.servingCarbohydrates,
 					servingFats: mealFood.servingFats,
 					servingProteins: mealFood.servingProteins,
-					maxKcal: 0,
 				},
 			});
 
 			router.navigate({ pathname: '/user/home/add-meal' });
 		} catch (error) {
-			console.error('Error adding food to meal', error);
+			// console.error('Error adding food to meal', error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -134,7 +135,6 @@ export function FoodDetail() {
 		const mealFood: IMealApi['eatenFoods'][number] & { mealId: string } = {
 			id: mealFoodId,
 			mealId: homeState.selectedMeal.id,
-			maxKcal: 0,
 			foodId: currentFood['food']['food_id'],
 			foodName: currentFood['food']['food_name'],
 			quantity: quantity,
@@ -164,13 +164,12 @@ export function FoodDetail() {
 					servingCarbohydrates: mealFood.servingCarbohydrates,
 					servingFats: mealFood.servingFats,
 					servingProteins: mealFood.servingProteins,
-					maxKcal: 0,
 				},
 			});
 
 			router.navigate({ pathname: '/user/home/add-meal' });
 		} catch (error) {
-			console.error('Error adding food to meal', error);
+			// console.error('Error adding food to meal', error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -189,15 +188,14 @@ export function FoodDetail() {
 							<ThemedText>{dayjs(homeState.selectedDate).locale('pt-br').format('dddd, DD [de] MMMM')}</ThemedText>
 						</View>
 
-						{/* 
-						<Image
-							source={{
-								uri:
-								currentFood?.food.food_images?.food_image[0].image_url || "",
-							}}
-							style={{ width: "100%", height: 200 }}
-							/> 
-						*/}
+						{currentFood?.food.food_images?.food_image[0].image_url && (
+							<Image
+								source={{
+									uri: currentFood?.food.food_images?.food_image[0].image_url || '',
+								}}
+								style={{ width: '100%', height: 230 }}
+							/>
+						)}
 					</View>
 				}
 				headerHeight={230}
@@ -219,7 +217,6 @@ export function FoodDetail() {
 						inputSearchStyle={styles.inputSearchStyle}
 						iconStyle={styles.iconStyle}
 						data={currentFood?.food?.servings.serving || []}
-						search
 						maxHeight={300}
 						labelField="serving_description"
 						valueField="serving_description"
@@ -263,7 +260,7 @@ export function FoodDetail() {
 					proteins={selectedServing?.protein ? quantity * Number(selectedServing?.protein) : 1}
 					calories={selectedServing?.calories ? quantity * Number(selectedServing?.calories) : 1}
 				/>
-				<NutrientsContaining allergen={currentFood?.food.food_attributes?.allergens.allergen || []} />
+				<NutrientsContaining allergen={currentFood?.food.food_attributes?.allergens?.allergen || []} />
 
 				<AdditionalInformation
 					serving={selectedServing}

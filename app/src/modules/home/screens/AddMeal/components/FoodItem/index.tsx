@@ -40,6 +40,8 @@ export function FoodItem({ handleRemove, item }: Props) {
 		setIsLoading(false);
 	}
 
+	console.log({ item: item.id });
+
 	return (
 		<Swipeable
 			overshootRight={false}

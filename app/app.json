@@ -18,9 +18,15 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
-			}
+			},
+			"permissions": [
+				"android.permission.CAMERA",
+				"android.permission.RECORD_AUDIO",
+				"android.permission.READ_CALENDAR",
+				"android.permission.WRITE_CALENDAR"
+			],
+			"package": "com.anonymous.app"
 		},
 		"web": {
 			"bundler": "metro",

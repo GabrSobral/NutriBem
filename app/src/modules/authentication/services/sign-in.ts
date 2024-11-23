@@ -39,7 +39,6 @@ export async function signInApi({ email, password }: Request): Promise<ServiceRe
 
 		if (!response.ok) {
 			const errorBody = await response.json();
-			console.error(`Something went wrong: ${errorBody.message || JSON.stringify(errorBody)}`);
 		}
 
 		const body = (await response.json()) as Response;

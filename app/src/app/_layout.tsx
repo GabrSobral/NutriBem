@@ -10,9 +10,9 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 import { HomeProvider } from '@/modules/home/contexts/context';
+import { RecipesProvider } from '@/modules/recipes/contexts/context';
 import { NutritionistProvider } from '@/modules/nutritionist/contexts/nutri';
 import { RoleVerificationLayer } from '@/components/application/RoleVerificationLayer';
-import { RecipesProvider } from '@/modules/recipes/contexts/context';
 
 SplashScreen.preventAutoHideAsync();
 

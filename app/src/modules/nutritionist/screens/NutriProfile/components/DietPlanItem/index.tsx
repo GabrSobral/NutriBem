@@ -30,7 +30,7 @@ export function DietPlanItem({ dietPlan }: Props) {
 				color={colorScheme === 'light' ? '#000000bb' : '#FFFFFFee'}
 			/>
 
-			<View>
+			<View style={{ flex: 1 }}>
 				<ThemedText
 					type="defaultSemiBold"
 					style={{ fontSize: 18 }}
@@ -39,7 +39,7 @@ export function DietPlanItem({ dietPlan }: Props) {
 				</ThemedText>
 
 				<ThemedText
-					style={{ fontSize: 18 }}
+					style={{ fontSize: 18, flex: 1 }}
 					numberOfLines={1}
 				>
 					{dietPlan.description}

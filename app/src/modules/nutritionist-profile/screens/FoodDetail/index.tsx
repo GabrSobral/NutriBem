@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Dropdown } from 'react-native-element-dropdown';
-import { ActivityIndicator, Pressable, Text, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, Text, useColorScheme, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
 import { Input } from '@/components/design-system/Input';
@@ -118,7 +118,7 @@ export function FoodDetail() {
 
 			router.back();
 		} catch (error) {
-			console.error('Error adding food to meal', error);
+			// console.error('Error adding food to meal', error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -136,13 +136,14 @@ export function FoodDetail() {
 							<ThemedText type="subtitle">{meal?.name || '-'}</ThemedText>
 						</View>
 
-						{/* <Image
-              source={{
-                uri:
-                  currentFood?.food.food_images?.food_image[0].image_url || "",
-              }}
-              style={{ width: "100%", height: 200 }}
-            /> */}
+						{currentFood?.food.food_images?.food_image[0].image_url && (
+							<Image
+								source={{
+									uri: currentFood?.food.food_images?.food_image[0].image_url || '',
+								}}
+								style={{ width: '100%', height: 230 }}
+							/>
+						)}
 					</View>
 				}
 				headerHeight={230}

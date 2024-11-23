@@ -33,7 +33,6 @@ export function DietPlanProvider({ children }: DietPlanProviderProps) {
 
 			return foods;
 		} catch (error) {
-			console.error(error);
 			return null;
 		}
 	}

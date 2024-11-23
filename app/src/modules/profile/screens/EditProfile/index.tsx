@@ -61,7 +61,7 @@ export function EditProfile() {
 					address,
 					lastName,
 					sex,
-					weight,
+					weight: weight ? Number(weight) : 0,
 					mainObjective,
 				},
 				{ accessToken: accessToken || '' }
@@ -85,7 +85,7 @@ export function EditProfile() {
 
 			setIsLoading(false);
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
 			setIsLoading(false);
 		}
 	}

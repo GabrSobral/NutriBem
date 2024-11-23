@@ -21,6 +21,10 @@ export type HomeActions =
 			type: 'REMOVE_FOOD_FROM_MEAL';
 			payload: { mealId: IMealApi['id']; foodId: IFood['food']['food_id'] };
 	  }
+	| {
+			type: 'REMOVE_FOOD_FROM_DIET_MEAL';
+			payload: { mealId: IMealApi['id']; foodId: IFood['food']['food_id'] };
+	  }
 	| { type: 'SELECT_MEAL'; payload: IMealApi }
 	| { type: 'SET_MEALS'; payload: IMealApi[] }
 	| {
@@ -158,6 +162,27 @@ export function HomeReducer(state: HomeState, action: HomeActions): HomeState {
 									maxKcal: 0,
 								},
 							],
+						};
+					}
+					return meal;
+				}),
+			};
+
+		case 'REMOVE_FOOD_FROM_DIET_MEAL':
+			return {
+				...state,
+				selectedMeal: state.selectedMeal
+					? {
+							...state.selectedMeal,
+							dietPlanFoods:
+								state.selectedMeal?.dietPlanFoods.filter(food => food.foodId !== action.payload.foodId) || [],
+						}
+					: null,
+				meals: state.meals.map(meal => {
+					if (meal.id === action.payload.mealId) {
+						return {
+							...meal,
+							dietPlanFoods: meal.dietPlanFoods.filter(food => food.foodId !== action.payload.foodId),
 						};
 					}
 					return meal;

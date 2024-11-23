@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams } from 'expo-router';
-import { useColorScheme, View } from 'react-native';
+import { Image, useColorScheme, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 import { Colors } from '@/constants/Colors';
@@ -76,13 +76,14 @@ export function FoodDetail() {
 			<ParallaxScrollView
 				headerImage={
 					<View style={styles.headerContainer}>
-						{/* <Image
-              source={{
-                uri:
-                  currentFood?.food.food_images?.food_image[0].image_url || "",
-              }}
-              style={{ width: "100%", height: 200 }}
-            /> */}
+						{currentFood?.food.food_images?.food_image[0].image_url && (
+							<Image
+								source={{
+									uri: currentFood?.food.food_images?.food_image[0].image_url || '',
+								}}
+								style={{ width: '100%', height: 230 }}
+							/>
+						)}
 					</View>
 				}
 				headerHeight={230}

@@ -117,7 +117,7 @@ export function EditDietPlan() {
 
 			goBack();
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -135,7 +135,7 @@ export function EditDietPlan() {
 						patientsDispatch({ type: 'REMOVE_DIET_PLAN', payload: dietPlanId });
 						dietPlanDispatch({ type: 'REMOVE_DIET_PLAN', payload: dietPlanId });
 					} catch (error) {
-						console.error(error);
+						// console.error(error);
 
 						setShowDeleteModal(false);
 					}

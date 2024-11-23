@@ -10,9 +10,9 @@ export function RecipesList() {
 
 	return (
 		<View style={styles.container}>
-			<ThemedText type="title">Inspire-se</ThemedText>
+			<ThemedText type="title">Receitas</ThemedText>
 
-			{recipesState.recipes?.recipe.map(item => (
+			{recipesState.recipes?.recipe?.map(item => (
 				<RecipeItem
 					item={item}
 					key={item.recipe_id}

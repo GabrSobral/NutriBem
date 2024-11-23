@@ -72,17 +72,6 @@ export function MealDetail() {
 					</ThemedText>
 				</View>
 
-				<Progress.Bar
-					progress={(ingestedKcal || 1) / maxKcal}
-					height={8}
-					style={{ marginTop: 12 }}
-					width={Dimensions.get('window').width - 32}
-					color={Colors.light.primary}
-					unfilledColor="#00000010"
-					borderWidth={0}
-					borderRadius={16}
-				/>
-
 				<MacroNutrients
 					carbs={{ current: ingestedCarbs || 0, max: maxCarbs || 0 }}
 					fats={{ current: ingestedFats || 0, max: maxFats || 0 }}

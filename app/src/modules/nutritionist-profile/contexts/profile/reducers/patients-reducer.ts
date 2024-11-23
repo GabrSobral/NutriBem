@@ -9,6 +9,10 @@ export interface IPatient {
 	photoUrl?: string;
 	firstName: string;
 	lastName?: string;
+	age: number | null;
+	height: number | null;
+	address: string | null;
+	mainObjective: string | null;
 	dietPlans: DietPlans[];
 }
 
