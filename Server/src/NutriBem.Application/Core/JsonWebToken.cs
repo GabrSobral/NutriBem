@@ -25,10 +25,10 @@ public class JsonWebToken(ILogger<JsonWebToken> logger, IOptions<JwtOptions> opt
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new Claim[] {
-            new (JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-            new (JwtRegisteredClaimNames.Name, user.FirstName),
-            new (JwtRegisteredClaimNames.FamilyName, user.LastName ?? ""),
-            new (JwtRegisteredClaimNames.Email, user.Email),
+            new (ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new (ClaimTypes.GivenName, user.FirstName),
+            new (ClaimTypes.Surname, user.LastName ?? ""),
+            new (ClaimTypes.Email, user.Email),
         };
 
         var token = new JwtSecurityToken(

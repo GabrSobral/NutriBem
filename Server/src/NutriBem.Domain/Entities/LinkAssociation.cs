@@ -4,16 +4,24 @@
 public class LinkAssociation
 {
     [Key]
-    public Ulid Id { get; set; }
-    public bool IsAccepted { get; set; }
-    public DateTime ExpiryAt { get; set; }
-    public DateTime CreatedAt { get; set; }
-    
-    [ForeignKey("user_id")]
+    public required Ulid Id { get; set; }
+
+    [Required]
+    public required Ulid NutritionistId { get; set; }
+
+    [Required]
     public Ulid UserId { get; set; }
 
-    [ForeignKey("nutritionist_id")]
-    public Ulid NutritionistId { get; set; }
+    public bool IsAccepted { get; set; } = true;
+    public DateTime ExpiryAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+
+    [ForeignKey(nameof(UserId))]
+    public User User { get; set; }
+
+    [ForeignKey(nameof(NutritionistId))]
+    public NutritionistProfile NutritionistProfile { get; set; }
 
     public static LinkAssociation Create(Ulid userId, Ulid nutritionistId)
     {

@@ -7,8 +7,8 @@ export interface IFatSecretToken {
 }
 
 export async function getAccessToken(): Promise<IFatSecretToken> {
-	const clientId = '07beafa670af4e66b3e3370bf5efc2e6';
-	const clientSecret = '49295d0dca6d4f61ad3dd6eecb453de7';
+	const clientId = '';
+	const clientSecret = '';
 	const tokenUrl = 'https://oauth.fatsecret.com/connect/token';
 
 	// Base64 encode the client_id and client_secret

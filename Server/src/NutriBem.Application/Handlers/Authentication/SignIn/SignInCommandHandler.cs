@@ -50,6 +50,10 @@ public class SignInCommandHandler(
             .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken)
         ?? throw new UserNotFoundException(user.Id);
 
+        var nutritionistProfile = await dbContext.NutritionistProfiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+
         string token = jsonWebToken.Sign(new JsonWebTokenPayload(
             UserId: user.Id,
             Email: user.Email,
@@ -60,6 +64,7 @@ public class SignInCommandHandler(
         string refreshTokenString = jsonWebToken.SignRefreshToken(refreshToken);
         
         user.UserProfile = userProfile;
+        user.NutritionistProfile = nutritionistProfile;
 
         return new SignInResponse(user, token, refreshTokenString);
     }

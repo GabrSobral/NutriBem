@@ -4,18 +4,23 @@ public class DataContext : DbContext
 {
     public DataContext() { }
 
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+    public DataContext(DbContextOptions<DataContext> options) : base(options) 
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Nutritionist> Nutritionists {  get; set; }
+    public DbSet<RecipeUser> RecipesUser { get; set; }
+    public DbSet<NutritionistProfile> NutritionistProfiles {  get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<ExternalLogin> ExternalLogins { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
-    public DbSet<Food> Food { get; set; }
-    public DbSet<DailyFoodTracking> DailyFoodTrackings { get; set; }
-    public DbSet<FoodPortion> FoodPortion { get; set; }
+    public DbSet<Meal> Meals{ get; set; }
+    public DbSet<MealFood> MealFoods{ get; set; }
+    public DbSet<LinkAssociation> LinkAssociations { get; set; }
+    public DbSet<DietPlan> DietPlans { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
