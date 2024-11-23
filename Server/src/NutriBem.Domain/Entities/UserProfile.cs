@@ -4,7 +4,6 @@
 public class UserProfile
 {
     [Key]
-    [ForeignKey("User")]
     public Ulid UserId { get; set; }
 
     [MaxLength(255)]
@@ -18,7 +17,20 @@ public class UserProfile
 
     public string? Address { get; set; } = string.Empty;
 
+    public ushort? Age { get; set; }
+
+    public ushort? Height { get; set; }
+    
+    public double? Weight { get; set; }
+
+    public string? Sex { get; set; }
+
+    public string? MainObjective { get; set; }
+
+
     public string? PhotoUrl { get; set; } = string.Empty;
 
+
+    [ForeignKey(nameof(UserId))]
     public User User { get; set; }
 }

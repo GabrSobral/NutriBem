@@ -4,10 +4,25 @@ public record UpdateUserDataCommand(
     Ulid UserId,
     
     string? FirstName,
-    string? LastName
-): ICommand;
+    string? LastName,
+    string? Address,
+
+    ushort? Height,
+    double? Weight,
+    string? Sex,
+    ushort? Age,
+    string? MainObjective
+
+) : ICommand;
 
 public record UpdateUserDataRequest(
     string? FirstName,
-    string? LastName
+    string? LastName,
+    string? Address,
+
+    ushort? Height,
+    double? Weight,
+    string? Sex,
+    ushort? Age,
+    string? MainObjective
 );

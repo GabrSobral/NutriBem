@@ -22,16 +22,56 @@ namespace NutriBem.Infra.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("NutriBem.Domain.Entities.DietPlan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<string>("AdditionalNote")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("diet_plan");
+                });
+
             modelBuilder.Entity("NutriBem.Domain.Entities.EmailConfirmation", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("character varying(26)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("boolean");
@@ -81,6 +121,153 @@ namespace NutriBem.Infra.Database.Migrations
                     b.ToTable("external_login");
                 });
 
+            modelBuilder.Entity("NutriBem.Domain.Entities.LinkAssociation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ExpiryAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NutritionistId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NutritionistId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("link_association");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.Meal", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<double?>("CarbohydratesCountMax")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("DietPlanId")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<double?>("FatCountMax")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("ProteinCountMax")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("RegisteredAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DietPlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("meal");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.MealFood", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<DateTime?>("EatenAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("FoodId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FoodName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MealId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("RegisteredAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ServingCalories")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("ServingCarbohydrates")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("ServingFats")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("ServingId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ServingName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double?>("ServingProteins")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealId");
+
+                    b.ToTable("meal_food");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.NutritionistProfile", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Crn")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("nutritionist_profile");
+                });
+
             modelBuilder.Entity("NutriBem.Domain.Entities.PasswordResetToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,10 +275,10 @@ namespace NutriBem.Infra.Database.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Token")
                         .IsRequired()
@@ -111,6 +298,40 @@ namespace NutriBem.Infra.Database.Migrations
                     b.ToTable("password_reset_token");
                 });
 
+            modelBuilder.Entity("NutriBem.Domain.Entities.RecipeUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("character varying(26)");
+
+                    b.Property<double>("Calories")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecipeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(26)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("recipe_user");
+                });
+
             modelBuilder.Entity("NutriBem.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<string>("Id")
@@ -120,10 +341,10 @@ namespace NutriBem.Infra.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -142,7 +363,7 @@ namespace NutriBem.Infra.Database.Migrations
                         .HasColumnType("character varying(26)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -167,7 +388,7 @@ namespace NutriBem.Infra.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -185,15 +406,24 @@ namespace NutriBem.Infra.Database.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("integer");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<int?>("Height")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<string>("MainObjective")
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
@@ -202,9 +432,34 @@ namespace NutriBem.Infra.Database.Migrations
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("text");
 
+                    b.Property<string>("Sex")
+                        .HasColumnType("text");
+
+                    b.Property<double?>("Weight")
+                        .HasColumnType("double precision");
+
                     b.HasKey("UserId");
 
                     b.ToTable("user_profile");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.DietPlan", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.NutritionistProfile", "Nutritionist")
+                        .WithMany("DietPlans")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NutriBem.Domain.Entities.User", "Patient")
+                        .WithMany("DietPlans")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Nutritionist");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("NutriBem.Domain.Entities.EmailConfirmation", b =>
@@ -229,10 +484,79 @@ namespace NutriBem.Infra.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("NutriBem.Domain.Entities.LinkAssociation", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.NutritionistProfile", "NutritionistProfile")
+                        .WithMany("LinkAssociations")
+                        .HasForeignKey("NutritionistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NutriBem.Domain.Entities.User", "User")
+                        .WithMany("LinkAssociations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NutritionistProfile");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.Meal", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.DietPlan", "DietPlan")
+                        .WithMany("Meals")
+                        .HasForeignKey("DietPlanId");
+
+                    b.HasOne("NutriBem.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DietPlan");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.MealFood", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.Meal", "Meal")
+                        .WithMany("MealFoods")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Meal");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.NutritionistProfile", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.User", "User")
+                        .WithOne("NutritionistProfile")
+                        .HasForeignKey("NutriBem.Domain.Entities.NutritionistProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("NutriBem.Domain.Entities.PasswordResetToken", b =>
                 {
                     b.HasOne("NutriBem.Domain.Entities.User", "User")
                         .WithMany("PasswordResetTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.RecipeUser", b =>
+                {
+                    b.HasOne("NutriBem.Domain.Entities.User", "User")
+                        .WithMany("RecipesUser")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -262,13 +586,38 @@ namespace NutriBem.Infra.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("NutriBem.Domain.Entities.DietPlan", b =>
+                {
+                    b.Navigation("Meals");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.Meal", b =>
+                {
+                    b.Navigation("MealFoods");
+                });
+
+            modelBuilder.Entity("NutriBem.Domain.Entities.NutritionistProfile", b =>
+                {
+                    b.Navigation("DietPlans");
+
+                    b.Navigation("LinkAssociations");
+                });
+
             modelBuilder.Entity("NutriBem.Domain.Entities.User", b =>
                 {
+                    b.Navigation("DietPlans");
+
                     b.Navigation("EmailConfirmations");
 
                     b.Navigation("ExternalLogins");
 
+                    b.Navigation("LinkAssociations");
+
+                    b.Navigation("NutritionistProfile");
+
                     b.Navigation("PasswordResetTokens");
+
+                    b.Navigation("RecipesUser");
 
                     b.Navigation("RefreshTokens");
 

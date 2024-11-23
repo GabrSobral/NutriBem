@@ -33,6 +33,26 @@ public sealed class ExceptionHandlerMiddleware(RequestDelegate next, ILogger<Exc
     {
         switch (error)
         {
+            case AssociationAlreadyExistsException:
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                logger.LogError($"[Association already exists] {error.Message}");
+                break;
+
+            case NutritionistNotFound:
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                logger.LogError($"[Nutritionist not found] {error.Message}");
+                break;
+
+            case MealFoodNotFoundException:
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                logger.LogError($"[Meal food not found] {error.Message}");
+                break;
+
+            case MealNotFoundException:
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                logger.LogError($"[Meal not found] {error.Message}");
+                break;
+
             case RefreshTokenUnavailableForUserException:
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 logger.LogError($"[Refresh token unavailable for user] {error.Message}");

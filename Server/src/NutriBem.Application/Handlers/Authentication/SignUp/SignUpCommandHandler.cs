@@ -22,6 +22,7 @@ public sealed class SignUpCommandHandler(
             PasswordHash = passwordEncrypter.Encrypt(command.Password, userId),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = null,
+            IsEmailConfirmed = true
         };
 
         UserProfile userProfile = new()
@@ -53,7 +54,16 @@ public sealed class SignUpCommandHandler(
         await dbContext.UserProfiles.AddAsync(userProfile, cancellationToken);
         await dbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
 
-        await SendEmailConfirmationAsync(newUser, cancellationToken);
+        NutritionistProfile? nutritionistProfile = null;
+
+        if(command.Crn != null || command.Crn != "")
+        {
+            nutritionistProfile = await CreateNutritionistProfileAsync(command.Crn, userId, cancellationToken);
+        }
+
+        newUser.NutritionistProfile = nutritionistProfile;
+
+        //await SendEmailConfirmationAsync(newUser, cancellationToken);
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -62,12 +72,19 @@ public sealed class SignUpCommandHandler(
         return new SignInResponse(newUser, token, refreshTokenString);
     }
 
+    public async Task<NutritionistProfile> CreateNutritionistProfileAsync(string crn, Ulid userId,CancellationToken cancellationToken) {
+        var nutritionistProfile = NutritionistProfile.Create(crn, userId);
+
+        await dbContext.NutritionistProfiles.AddAsync(nutritionistProfile, cancellationToken);
+
+        return nutritionistProfile;
+    }
+
     private async Task<EmailConfirmation> SendEmailConfirmationAsync(User user, CancellationToken cancellationToken)
     {
         var emailconfirmation = EmailConfirmation.Create(user.Id);
 
         await dbContext.EmailConfirmations.AddAsync(emailconfirmation, cancellationToken);
-
         await emailSender.SendVerificationEmailAsync(user.Email, emailconfirmation, cancellationToken);
 
         return emailconfirmation;

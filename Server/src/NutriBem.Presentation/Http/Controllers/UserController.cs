@@ -1,4 +1,6 @@
-﻿using NutriBem.Application.Handlers.Users.Queries.GetByProviderId;
+﻿using NutriBem.Application.Handlers.Recipes.ListSavedRecipes;
+using NutriBem.Application.Handlers.Recipes.SaveRecipe;
+using NutriBem.Application.Handlers.Users.Queries.GetByProviderId;
 using NutriBem.Domain.Entities;
 
 namespace NutriBem.Presentation;
@@ -85,25 +87,33 @@ public class UserController(ISender sender, IHttpContextAccessor httpContextAcce
     /// <summary>
     /// Update an user by Id.
     /// </summary>
-    /// <param name="userId">User Id</param>
     /// <param name="request">Request body</param>
     /// <response code="204"></response>
     /// <response code="400">If the body is invalid</response>
     /// <response code="404">If the user was not found</response>
     /// <response code="500">Internal server error</response>
-    [HttpPut("{userId}", Name = nameof(UpdateUserData))]
+    [HttpPut("", Name = nameof(UpdateUserData))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUserData(
-        [FromRoute] Ulid userId, 
         [FromBody] UpdateUserDataRequest request)
+
     {
+        var userId = HttpUserClaims.GetId(httpContextAccessor?.HttpContext);
+
         var command = new UpdateUserDataCommand(
             UserId: userId,
             FirstName: request.FirstName,
-            LastName: request.LastName);
+            LastName: request.LastName,
+            Address: request.Address,
+            Height: request.Height,
+            Age: request.Age,
+            Weight: request.Weight,
+            Sex: request.Sex,
+            MainObjective: request.MainObjective
+        );
 
         await sender.Send(command);
 
@@ -137,5 +147,37 @@ public class UserController(ISender sender, IHttpContextAccessor httpContextAcce
         await sender.Send(command);
 
         return NoContent();
+    }
+
+    [HttpPost("recipe/save")]
+    public async Task<IActionResult> SaveRecipe(
+        [FromBody] SaveRecipeRequest request)
+    {
+        var userId = HttpUserClaims.GetId(httpContextAccessor?.HttpContext);
+
+        var command = new SaveRecipeCommand(
+            AccountRequesterId: userId,
+            RecipeId: request.RecipeId,
+            Title: request.Title,
+            Description: request.Title,
+            Calories: request.Calories,
+            PhotoUrl: request.PhotoUrl
+        );
+
+        await sender.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpGet("recipe/save")]
+    public async Task<IActionResult> GetSavedRecipes()
+    {
+        var userId = HttpUserClaims.GetId(httpContextAccessor?.HttpContext);
+
+        var command = new ListSavedRecipesQuery(AccountRequesterId: userId);
+
+        var response = await sender.Send(command);
+
+        return Ok(response);
     }
 }

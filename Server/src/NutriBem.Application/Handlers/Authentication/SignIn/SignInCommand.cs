@@ -17,9 +17,15 @@ public record SignInResponse
             user.Id,
             user.UserProfile.FirstName,
             user.UserProfile.LastName ?? "",
+            user.UserProfile.Address ?? "",
             user.Email,
             user.CreatedAt,
-            user.UserProfile.PhotoUrl
+            user.UserProfile.PhotoUrl,
+            user.NutritionistProfile?.Crn,
+            user.UserProfile.Age,
+            user.UserProfile.Weight,
+            user.UserProfile.Sex,
+            user.UserProfile.MainObjective
         );
         AccessToken = token;
         RefreshToken = refreshToken;
@@ -30,7 +36,13 @@ public record UserResponse(
     Ulid Id,
     string FirstName,
     string LastName,
+    string? Address,
     string Email,
     DateTime CreatedAt,
-    string? PhotoUrl
+    string? PhotoUrl,
+    string? Crn,
+    ushort? Age,
+    double? Weight,
+    string? Sex,
+    string? MainObjective
 );

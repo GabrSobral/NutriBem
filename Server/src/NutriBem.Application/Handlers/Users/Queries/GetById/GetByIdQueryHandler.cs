@@ -14,6 +14,7 @@ public class GetByIdQueryHandler(
         var user = await dbContext.Users
             .AsNoTracking()
             .Include(x => x.UserProfile)
+            .Include(x => x.NutritionistProfile)
             .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken)
         ?? throw new UserNotFoundException(userId);
 
